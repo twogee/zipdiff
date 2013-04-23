@@ -6,8 +6,13 @@
 package zipdiff.ant;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
 import zipdiff.DifferenceCalculator;
@@ -18,182 +23,321 @@ import zipdiff.output.BuilderFactory;
 /**
  * Ant task for running zipdiff from a build.xml file
  *
- *
  * @author Sean C. Sullivan
  */
 public class ZipDiffTask extends Task {
-	private String filename1;
+	/**
+	 * Field source.
+	 */
+	private String source;
 
-	private String filename2;
+	/**
+	 * Field target.
+	 */
+	private String target;
+	
+	/**
+	 * Field numberOfOutputLevelsToSkip.
+	 */
+	private int numberOfOutputLevelsToSkip = 0;
 
-	private int numberOfOutputPrefixesToSkip;
+	/**
+	 * Field numberOfSourceLevelsToSkip.
+	 */
+	private int numberOfSourceLevelsToSkip = 0;
 
-	private int skipPrefixes1 = 0;
+	/**
+	 * Field numberOfTargetLevelsToSkip.
+	 */
+	private int numberOfTargetLevelsToSkip = 0;
 
-	private int SkipPrefixes2 = 0;
+	/**
+	 * Field output.
+	 */
+	private String output = "-";
 
-	private String destfile;
-
+	/**
+	 * Field ignoreTimestamps.
+	 */
 	private boolean ignoreTimestamps = false;
 
+	/**
+	 * Field ignoreCVSFiles.
+	 */
 	private boolean ignoreCVSFiles = false;
 
+	/**
+	 * Field compareCRCValues.
+	 */
 	private boolean compareCRCValues = true;
 
+	/**
+	 * Field patterns.
+	 */
+	private Set<String> patterns = new HashSet<String>();
+
+	/**
+	 * Field property.
+	 */
+	private String property = "";
+
+	// Backwards compatibility stuff
+
 	public void setFilename1(String name) {
-		filename1 = name;
+        log("!! Attribute filename1 is deprecated. !!", Project.MSG_WARN);
+        log("!! Use the source attribute instead.  !!", Project.MSG_WARN);
+		this.source = name;
 	}
 
 	public void setFilename2(String name) {
-		filename2 = name;
+        log("!! Attribute filename2 is deprecated. !!", Project.MSG_WARN);
+        log("!! Use the target attribute instead.  !!", Project.MSG_WARN);
+		this.target = name;
 	}
 
-
-
-	public int getNumberOfOutputPrefixesToSkip() {
-		return numberOfOutputPrefixesToSkip;
+	public void setDestFile(String name) {
+        log("!! Attribute destfile is deprecated. !!", Project.MSG_WARN);
+        log("!! Use the output attribute instead. !!", Project.MSG_WARN);
+		this.output = name;
 	}
 
-	public void setNumberOfOutputPrefixesToSkip(int numberOfOutputPrefixesToSkip) {
-		this.numberOfOutputPrefixesToSkip = numberOfOutputPrefixesToSkip;
+	/**
+	 * Method setSource.
+	 * @param name String
+	 */
+	public void setSource(String name) {
+		this.source = name;
 	}
 
-	public int getSkipPrefixes1() {
-		return skipPrefixes1;
+	/**
+	 * Method setTarget.
+	 * @param name String
+	 */
+	public void setTarget(String name) {
+		this.target = name;
 	}
 
-	public void setSkipPrefixes1(int numberOfPrefixesToSkip1) {
-		this.skipPrefixes1 = numberOfPrefixesToSkip1;
+	/**
+	 * Method getSkipOutputLevels.
+	 * @return int
+	 */
+	public int getSkipOutputLevels() {
+		return this.numberOfOutputLevelsToSkip;
 	}
 
-	public int getSkipPrefixes2() {
-		return SkipPrefixes2;
+	/**
+	 * Method setSkipOutputLevels.
+	 * @param numberOfLevelsToSkip int
+	 */
+	public void setSkipOutputLevels(int numberOfLevelsToSkip) {
+		this.numberOfOutputLevelsToSkip = numberOfLevelsToSkip;
 	}
 
-	public void setSkipPrefixes2(int numberOfPrefixesToSkip2) {
-		this.SkipPrefixes2 = numberOfPrefixesToSkip2;
+	/**
+	 * Method getSkipSourceLevels.
+	 * @return int
+	 */
+	public int getSkipSourceLevels() {
+		return this.numberOfSourceLevelsToSkip;
 	}
 
-	public void setIgnoreTimestamps(boolean b) {
-		ignoreTimestamps = b;
+	/**
+	 * Method setSkipSourceLevels.
+	 * @param numberOfLevelsToSkip int
+	 */
+	public void setSkipSourceLevels(int numberOfLevelsToSkip) {
+		this.numberOfSourceLevelsToSkip = numberOfLevelsToSkip;
 	}
 
+	/**
+	 * Method getSkipTargetLevels.
+	 * @return int
+	 */
+	public int getSkipTargetLevels() {
+		return this.numberOfTargetLevelsToSkip;
+	}
+
+	/**
+	 * Method setSkipTargetLevels.
+	 * @param numberOfLevelsToSkip int
+	 */
+	public void setSkipTargetLevels(int numberOfLevelsToSkip) {
+		this.numberOfTargetLevelsToSkip = numberOfLevelsToSkip;
+	}
+
+	/**
+	 * Method getIgnoreTimestamps.
+	 * @return boolean
+	 */
 	public boolean getIgnoreTimestamps() {
-		return ignoreTimestamps;
+		return this.ignoreTimestamps;
 	}
 
-	public void setIgnoreCVSFiles(boolean b) {
-		ignoreCVSFiles = b;
+	/**
+	 * Method setIgnoreTimestamps.
+	 * @param b boolean
+	 */
+	public void setIgnoreTimestamps(boolean b) {
+		this.ignoreTimestamps = b;
 	}
 
+	/**
+	 * Method getIgnoreCVSFiles.
+	 * @return boolean
+	 */
 	public boolean getIgnoreCVSFiles() {
-		return ignoreCVSFiles;
+		return this.ignoreCVSFiles;
 	}
 
-	public void setCompareCRCValues(boolean b) {
-		compareCRCValues = b;
+	/**
+	 * Method setIgnoreCVSFiles.
+	 * @param b boolean
+	 */
+	public void setIgnoreCVSFiles(boolean b) {
+		this.ignoreCVSFiles = b;
 	}
 
+	/**
+	 * Method getCompareCRCValues.
+	 * @return boolean
+	 */
 	public boolean getCompareCRCValues() {
-		return compareCRCValues;
+		return this.compareCRCValues;
 	}
 
-	@Override
+	/**
+	 * Method setCompareCRCValues.
+	 * @param b boolean
+	 */
+	public void setCompareCRCValues(boolean b) {
+		this.compareCRCValues = b;
+	}
+
+	/**
+	 * Method getExludeRegexp.
+	 * @return Set<String>
+	 */
+	public Set<String> getExludeRegexp() {
+		return this.patterns;
+	}
+
+	/**
+	 * Method setExcludeRegexp.
+	 * @param excludeRegexp String
+	 */
+	public void setExcludeRegexp(String excludeRegexp) {
+		if (excludeRegexp == null || "".equals(excludeRegexp)) {
+			return;
+		}
+		try {
+			Pattern.compile(excludeRegexp);
+			this.patterns.add(excludeRegexp);
+		} catch (PatternSyntaxException e) {
+			log("Cannot set up excluderegexp: " + e.getMessage(), Project.MSG_WARN);
+		}
+	}
+
+	/**
+	 * gets the name of the output file
+	 * @return output file
+	 */
+	public String getOutput() {
+		return this.output;
+	}
+
+	/**
+	 * sets the name of the output file
+	 * @param name filename
+	 */
+	public void setOutput(String name) {
+		this.output = name;
+	}
+
+	/**
+	 * Method setProperty.
+	 * @param name String
+	 */
+	public void setProperty(String name) {
+		this.property = name;
+	}
+
+	/**
+	 * Method execute.
+	 * @throws BuildException
+	 */
 	public void execute() throws BuildException {
 		validate();
 
-		// this.log("Filename1=" + filename1, Project.MSG_DEBUG);
-		// this.log("Filename2=" + filename2, Project.MSG_DEBUG);
-		// this.log("destfile=" + getDestFile(), Project.MSG_DEBUG);
+		// log("Source=" + source, Project.MSG_DEBUG);
+		// log("Target=" + target, Project.MSG_DEBUG);
+		// log("Output=" + getOutput(), Project.MSG_DEBUG);
 
-		Differences d = calculateDifferences();
-
-		try {
-			writeDestFile(d);
-		} catch (java.io.IOException ex) {
-			throw new BuildException(ex);
+		Differences diff = calculateDifferences();
+		if (!"".equals(property) && null == getProject().getProperty(property) && diff.hasDifferences()) {
+			getProject().setNewProperty(property, "true");
 		}
 
+		try {
+			writeOutput(diff);
+		} catch (IOException ex) {
+			throw new BuildException(ex);
+		}
 	}
 
 	/**
 	 * writes the output file
-	 *
 	 * @param d set of Differences
 	 * @throws IOException
 	 */
-	protected void writeDestFile(Differences d) throws IOException {
-		String destfilename = getDestFile();
-		Builder builder = BuilderFactory.create(destfilename);
-		builder.build(destfilename, numberOfOutputPrefixesToSkip, d);
-	}
-
-	/**
-	 * gets the name of the target file
-	 *
-	 * @return target file
-	 */
-	public String getDestFile() {
-		return destfile;
-	}
-
-	/**
-	 * sets the name of the target file
-	 *
-	 * @param name filename
-	 */
-	public void setDestFile(String name) {
-		destfile = name;
+	protected void writeOutput(Differences d) throws IOException {
+		String output = getOutput();
+		Builder builder = BuilderFactory.create(output);
+		builder.build(output, getSkipOutputLevels(), d);
 	}
 
 	/**
 	 * calculates the differences
-	 *
 	 * @return set of Differences
 	 * @throws BuildException in case of an input/output error
 	 */
 	protected Differences calculateDifferences() throws BuildException {
 		DifferenceCalculator calculator;
 
-		Differences d = null;
+		Differences diff = null;
 
 		try {
-			calculator = new DifferenceCalculator(filename1, filename2);
-			calculator.setNumberOfPrefixesToSkip1(skipPrefixes1);
-			calculator.setNumberOfPrefixesToSkip2(SkipPrefixes2);
+			calculator = new DifferenceCalculator(this.source, this.target);
+			calculator.setNumberOfSourceLevelsToSkip(getSkipSourceLevels());
+			calculator.setNumberOfTargetLevelsToSkip(getSkipTargetLevels());
 			calculator.setCompareCRCValues(getCompareCRCValues());
 			calculator.setIgnoreTimestamps(getIgnoreTimestamps());
 			calculator.setIgnoreCVSFiles(getIgnoreCVSFiles());
+			calculator.setFilenameRegexToIgnore(getExludeRegexp());
 
-			// todo : calculator.setFilenamesToIgnore(patterns);
-
-			d = calculator.getDifferences();
+			diff = calculator.getDifferences();
 		} catch (IOException ex) {
 			throw new BuildException(ex);
 		}
 
-		return d;
+		return diff;
 	}
 
 	/**
 	 * validates the parameters
-	 *
 	 * @throws BuildException in case of invalid parameters
 	 */
 	protected void validate() throws BuildException {
-		if ((filename1 == null) || (filename1.length() < 1)) {
-			throw new BuildException("filename1 is required");
+		if ((this.source == null) || (this.source.length() < 1)) {
+			throw new BuildException("source is required");
 		}
 
-		if ((filename2 == null) || (filename2.length() < 1)) {
-			throw new BuildException("filename2 is required");
+		if ((this.target == null) || (this.target.length() < 1)) {
+			throw new BuildException("target is required");
 		}
 
-		String destinationfile = getDestFile();
-
-		if ((destinationfile == null) || (destinationfile.length() < 1)) {
-			throw new BuildException("destfile is required");
+		String output = getOutput();
+		if ((output == null) || (output.length() < 1)) {
+			throw new BuildException("output is required");
 		}
 	}
-
 }

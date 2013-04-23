@@ -1,0 +1,31 @@
+<ivy-module version="2.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+
+  <info organisation="zipdiff"
+        module="zipdiff"
+        revision="${version}">
+    <description homepage="http://www.jboss.org/zipdiff">
+      Zipdiff - an archive diff tool
+    </description>
+  </info>
+
+  <configurations defaultconfmapping="core->default;zipdiff->default;zipdiff-ant->default">
+    <conf name="core" transitive="false"/>
+
+    <conf name="zipdiff" transitive="false"/>
+    <conf name="zipdiff-ant" transitive="false"/>
+  </configurations>
+
+  <publications>
+    <artifact name="zipdiff" type="jar"/>
+    <artifact name="zipdiff-ant" type="jar"/>
+  </publications>
+
+  <dependencies>
+    <dependency org="junit" name="junit" rev="4.11" conf="core"/>
+    <dependency org="commons-cli" name="commons-cli" rev="1.2" conf="core,zipdiff"/>
+    <dependency org="ant" name="ant" rev="1.6.5" conf="core,zipdiff-ant"/>
+  </dependencies>
+
+</ivy-module>

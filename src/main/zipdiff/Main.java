@@ -6,6 +6,7 @@
 package zipdiff;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.MissingOptionException;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
@@ -26,90 +28,169 @@ import zipdiff.output.BuilderFactory;
  * @author Sean C. Sullivan, J.Stewart, Hendrik Brummermann
  */
 public class Main {
+	/**
+	 * Field EXITCODE_ERROR.
+	 * (value is 2)
+	 */
 	private static final int EXITCODE_ERROR = 2;
 
+	/**
+	 * Field EXITCODE_DIFF.
+	 * (value is 1)
+	 */
 	private static final int EXITCODE_DIFF = 1;
 
+	/**
+	 * Field OPTION_COMPARE_CRC_VALUES.
+	 * (value is ""comparecrcvalues"")
+	 */
 	private static final String OPTION_COMPARE_CRC_VALUES = "comparecrcvalues";
 
+	/**
+	 * Field OPTION_COMPARE_TIMESTAMPS.
+	 * (value is ""comparetimestamps"")
+	 */
 	private static final String OPTION_COMPARE_TIMESTAMPS = "comparetimestamps";
 
+	/**
+	 * Field OPTION_IGNORE_CVS_FILES.
+	 * (value is ""ignorecvsfiles"")
+	 */
 	private static final String OPTION_IGNORE_CVS_FILES = "ignorecvsfiles";
 
-	private static final String OPTION_OUTPUT_FILE = "outputfile";
+	/**
+	 * Field OPTION_OUTPUT_FILE.
+	 * (value is ""output"")
+	 */
+	private static final String OPTION_OUTPUT_FILE = "output";
 
-	private static final String OPTION_FILE1 = "file1";
+	/**
+	 * Field OPTION_SOURCE_FILE.
+	 * (value is ""source"")
+	 */
+	private static final String OPTION_SOURCE_FILE = "source";
 
-	private static final String OPTION_FILE2 = "file2";
+	/**
+	 * Field OPTION_TARGET_FILE.
+	 * (value is ""target"")
+	 */
+	private static final String OPTION_TARGET_FILE = "target";
 
-	private static final String OPTION_SKIP_OUTPUT_PREFIXES = "skipoutputprefixes";
+	/**
+	 * Field OPTION_SKIP_OUTPUT_LEVELS.
+	 * (value is ""skipoutputlevels"")
+	 */
+	private static final String OPTION_SKIP_OUTPUT_LEVELS = "skipoutputlevels";
 
-	private static final String OPTION_SKIP_PREFIX1 = "skipprefixes1";
+	/**
+	 * Field OPTION_SKIP_SOURCE_LEVELS.
+	 * (value is ""skipsourcelevels"")
+	 */
+	private static final String OPTION_SKIP_SOURCE_LEVELS = "skipsourcelevels";
 
-	private static final String OPTION_SKIP_PREFIX2 = "skipprefixes2";
+	/**
+	 * Field OPTION_SKIP_TARGET_LEVELS.
+	 * (value is ""skiptargetlevels"")
+	 */
+	private static final String OPTION_SKIP_TARGET_LEVELS = "skiptargetlevels";
 
-	private static final String OPTION_REGEX = "regex";
+	/**
+	 * Field OPTION_REGEX.
+	 * (value is ""excluderegex"")
+	 */
+	private static final String OPTION_REGEX = "excluderegex";
 
-	private static final String OPTION_EXIT_WITH_ERROR_ON_DIFF = "exitwitherrorondifference";
+	/**
+	 * Field OPTION_ERROR_ON_DIFF.
+	 * (value is ""errorondifference"")
+	 */
+	private static final String OPTION_ERROR_ON_DIFF = "errorondifference";
 
+	/**
+	 * Field OPTION_VERBOSE.
+	 * (value is ""verbose"")
+	 */
 	private static final String OPTION_VERBOSE = "verbose";
 
-	private static final Options options;
+	/**
+	 * Field OPTIONS.
+	 */
+	private static final Options OPTIONS;
 
 	// static initializer
 	static {
-		options = new Options();
+		OPTIONS = new Options();
 
-		Option compareTS = new Option(OPTION_COMPARE_TIMESTAMPS, OPTION_COMPARE_TIMESTAMPS, false, "Compare timestamps");
+		Option compareTS =
+			new Option(OPTION_COMPARE_TIMESTAMPS, OPTION_COMPARE_TIMESTAMPS, false, "compare timestamps");
 		compareTS.setRequired(false);
 
-		Option compareCRC = new Option(OPTION_COMPARE_CRC_VALUES, OPTION_COMPARE_CRC_VALUES, false, "Compare CRC values");
+		Option compareCRC =
+			new Option(OPTION_COMPARE_CRC_VALUES, OPTION_COMPARE_CRC_VALUES, false, "compare CRC values");
 		compareCRC.setRequired(false);
 
-		Option file1 = new Option(OPTION_FILE1, OPTION_FILE1, true, "<filename> first file to compare");
-		file1.setRequired(true);
+		Option source =
+			new Option(OPTION_SOURCE_FILE, OPTION_SOURCE_FILE, true, "source file to compare");
+		source.setRequired(true);
 
-		Option file2 = new Option(OPTION_FILE2, OPTION_FILE2, true, "<filename> second file to compare");
-		file2.setRequired(true);
+		Option target =
+			new Option(OPTION_TARGET_FILE, OPTION_TARGET_FILE, true, "target file to compare");
+		target.setRequired(true);
 
-		Option numberOfOutputPrefixesToSkip = new Option(OPTION_SKIP_OUTPUT_PREFIXES, OPTION_SKIP_OUTPUT_PREFIXES, true, "<n> number of directory prefix to skip in the output file (if supported by outputter");
-		numberOfOutputPrefixesToSkip.setRequired(false);
+		Option numberOfLevelsToSkipInOutput =
+			new Option(OPTION_SKIP_OUTPUT_LEVELS, OPTION_SKIP_OUTPUT_LEVELS, true,
+					   "number of directory levels to skip in the output file (if supported by output processor");
+		numberOfLevelsToSkipInOutput.setRequired(false);
 
+		Option numberOfLevelsToSkipInSource =
+			new Option(OPTION_SKIP_SOURCE_LEVELS, OPTION_SKIP_SOURCE_LEVELS, true,
+					   "number of directory levels to skip in the source file");
+		numberOfLevelsToSkipInSource.setRequired(false);
 
-		Option numberOfPrefixesToSkip1 = new Option(OPTION_SKIP_PREFIX1, OPTION_SKIP_PREFIX1, true, "<n> number of directory prefix to skip for the first file");
-		numberOfPrefixesToSkip1.setRequired(false);
+		Option numberOfLevelsToSkipInTarget =
+			new Option(OPTION_SKIP_TARGET_LEVELS, OPTION_SKIP_TARGET_LEVELS, true,
+					   "number of directory levels to skip in the target file");
+		numberOfLevelsToSkipInTarget.setRequired(false);
 
-		Option numberOfPrefixesToSkip2 = new Option(OPTION_SKIP_PREFIX2, OPTION_SKIP_PREFIX2, true, "<n> number of directory prefix to skip for the second file");
-		numberOfPrefixesToSkip2.setRequired(false);
-
-		Option outputFileOption = new Option(OPTION_OUTPUT_FILE, OPTION_OUTPUT_FILE, true, "output filename");
+		Option outputFileOption =
+			new Option(OPTION_OUTPUT_FILE, OPTION_OUTPUT_FILE, true, "output filename");
 		outputFileOption.setRequired(false);
 
-		Option regex = new Option(OPTION_REGEX, OPTION_REGEX, true, "regular expression to match files to exclude e.g. (?i)meta-inf.*");
+		Option regex =
+			new Option(OPTION_REGEX, OPTION_REGEX, true,
+                       "regular expression to exclude matching files e.g. (?i)meta-inf.*");
 		regex.setRequired(false);
 
-		Option ignoreCVSFilesOption = new Option(OPTION_IGNORE_CVS_FILES, OPTION_IGNORE_CVS_FILES, false, "ignore CVS files");
+		Option ignoreCVSFilesOption =
+			new Option(OPTION_IGNORE_CVS_FILES, OPTION_IGNORE_CVS_FILES, false, "ignore CVS files");
 		ignoreCVSFilesOption.setRequired(false);
 
-		Option exitWithError = new Option(OPTION_EXIT_WITH_ERROR_ON_DIFF, OPTION_EXIT_WITH_ERROR_ON_DIFF, false, "if a difference is found then exit with error " + EXITCODE_DIFF);
+		Option exitWithError =
+			new Option(OPTION_ERROR_ON_DIFF, OPTION_ERROR_ON_DIFF, false,
+					   "exit with error code " + EXITCODE_DIFF + " if a difference is found");
 
-		Option verboseOption = new Option(OPTION_VERBOSE, OPTION_VERBOSE, false, "verbose mode");
+		Option verboseOption =
+			new Option(OPTION_VERBOSE, OPTION_VERBOSE, false, "verbose mode");
 
-		options.addOption(compareTS);
-		options.addOption(compareCRC);
-		options.addOption(file1);
-		options.addOption(file2);
-		options.addOption(numberOfOutputPrefixesToSkip);
-		options.addOption(numberOfPrefixesToSkip1);
-		options.addOption(numberOfPrefixesToSkip2);
-		options.addOption(regex);
-		options.addOption(ignoreCVSFilesOption);
-		options.addOption(exitWithError);
-		options.addOption(verboseOption);
-		options.addOption(outputFileOption);
+		OPTIONS.addOption(compareTS);
+		OPTIONS.addOption(compareCRC);
+		OPTIONS.addOption(source);
+		OPTIONS.addOption(target);
+		OPTIONS.addOption(numberOfLevelsToSkipInOutput);
+		OPTIONS.addOption(numberOfLevelsToSkipInSource);
+		OPTIONS.addOption(numberOfLevelsToSkipInTarget);
+		OPTIONS.addOption(regex);
+		OPTIONS.addOption(ignoreCVSFilesOption);
+		OPTIONS.addOption(exitWithError);
+		OPTIONS.addOption(verboseOption);
+		OPTIONS.addOption(outputFileOption);
 	}
 
-	private static void checkFile(java.io.File f) {
+	/**
+	 * Method checkFile.
+	 * @param f File
+	 */
+	private static void checkFile(File f) {
 		String filename = f.toString();
 
 		if (!f.exists()) {
@@ -126,63 +207,59 @@ public class Main {
 			System.err.println("'" + filename + "' is a directory");
 			System.exit(EXITCODE_ERROR);
 		}
-
-	}
-
-	private static void writeOutputFile(String filename, int numberOfOutputPrefixesToSkip, Differences d) throws java.io.IOException {
-		Builder builder = BuilderFactory.create(filename);
-		builder.build(filename, numberOfOutputPrefixesToSkip, d);
 	}
 
 	/**
-	 *
+	 * Method writeOutputFile.
+	 * @param filename String
+	 * @param numberOfOutputLevelsToSkip int
+	 * @param d Differences
+	 * @throws IOException
+	 */
+	private static void writeOutputFile(String filename, int numberOfOutputLevelsToSkip, Differences d) throws IOException {
+		Builder builder = BuilderFactory.create(filename);
+		builder.build(filename, numberOfOutputLevelsToSkip, d);
+	}
+
+	/**
 	 * The command line interface to zipdiff utility
-	 *
 	 * @param args The command line parameters
-	 *
 	 */
 	public static void main(String[] args) {
 		CommandLineParser parser = new GnuParser();
 
 		try {
-			CommandLine line = parser.parse(options, args);
+			CommandLine line = parser.parse(OPTIONS, args);
 
-			String filename1 = null;
-			String filename2 = null;
+			String sourcefile = line.getOptionValue(OPTION_SOURCE_FILE);
+			String targetfile = line.getOptionValue(OPTION_TARGET_FILE);
 
-			filename1 = line.getOptionValue(OPTION_FILE1);
-			filename2 = line.getOptionValue(OPTION_FILE2);
+			File source = new File(sourcefile);
+			File target = new File(targetfile);
 
-			File f1 = new File(filename1);
-			File f2 = new File(filename2);
+			checkFile(source);
+			checkFile(target);
 
-			checkFile(f1);
-			checkFile(f2);
+			System.out.println("Source = " + source);
+			System.out.println("Target = " + target);
 
-			System.out.println("File 1 = " + f1);
-			System.out.println("File 2 = " + f2);
+			DifferenceCalculator calc = new DifferenceCalculator(source, target);
 
-			DifferenceCalculator calc = new DifferenceCalculator(f1, f2);
-
-			int numberOfPrefixesToSkip1 = 0;
-			if (line.getOptionValue(OPTION_SKIP_PREFIX1) != null) {
-				numberOfPrefixesToSkip1 = Integer.parseInt(line.getOptionValue(OPTION_SKIP_PREFIX1));
+			int numberOfLevelsToSkipInSource = 0;
+			if (line.getOptionValue(OPTION_SKIP_SOURCE_LEVELS) != null) {
+				numberOfLevelsToSkipInSource = Integer.parseInt(line.getOptionValue(OPTION_SKIP_SOURCE_LEVELS));
 			}
-			int numberOfPrefixesToSkip2 = 0;
-			if (line.getOptionValue(OPTION_SKIP_PREFIX2) != null) {
-				numberOfPrefixesToSkip2 = Integer.parseInt(line.getOptionValue(OPTION_SKIP_PREFIX2));
+			int numberOfLevelsToSkipInTarget = 0;
+			if (line.getOptionValue(OPTION_SKIP_TARGET_LEVELS) != null) {
+				numberOfLevelsToSkipInTarget = Integer.parseInt(line.getOptionValue(OPTION_SKIP_TARGET_LEVELS));
 			}
-			int numberOfOutputPrefixesToSkip = 0;
-			if (line.getOptionValue(OPTION_SKIP_OUTPUT_PREFIXES) != null) {
-				numberOfOutputPrefixesToSkip = Integer.parseInt(line.getOptionValue(OPTION_SKIP_OUTPUT_PREFIXES));
+			int numberOfLevelsToSkipInOutput = 0;
+			if (line.getOptionValue(OPTION_SKIP_OUTPUT_LEVELS) != null) {
+				numberOfLevelsToSkipInOutput = Integer.parseInt(line.getOptionValue(OPTION_SKIP_OUTPUT_LEVELS));
 			}
 
-			calc.setNumberOfPrefixesToSkip1(numberOfPrefixesToSkip1);
-			calc.setNumberOfPrefixesToSkip2(numberOfPrefixesToSkip2);
-
-			String regularExpression = null;
-
-			// todo - calc.setFilenamesToIgnore();
+			calc.setNumberOfSourceLevelsToSkip(numberOfLevelsToSkipInSource);
+			calc.setNumberOfTargetLevelsToSkip(numberOfLevelsToSkipInTarget);
 
 			if (line.hasOption(OPTION_COMPARE_CRC_VALUES)) {
 				calc.setCompareCRCValues(true);
@@ -203,30 +280,29 @@ public class Main {
 			}
 
 			if (line.hasOption(OPTION_REGEX)) {
-				regularExpression = line.getOptionValue(OPTION_REGEX);
-				Set regexSet = new HashSet();
+				String regularExpression = line.getOptionValue(OPTION_REGEX);
+				Set<String> regexSet = new HashSet<String>();
 				regexSet.add(regularExpression);
 
 				calc.setFilenameRegexToIgnore(regexSet);
 			}
 
 			boolean exitWithErrorOnDiff = false;
-			if (line.hasOption(OPTION_EXIT_WITH_ERROR_ON_DIFF)) {
+			if (line.hasOption(OPTION_ERROR_ON_DIFF)) {
 				exitWithErrorOnDiff = true;
 			}
 
-			Differences d = calc.getDifferences();
+			Differences diff = calc.getDifferences();
 
 			if (line.hasOption(OPTION_OUTPUT_FILE)) {
-				String outputFilename = line.getOptionValue(OPTION_OUTPUT_FILE);
-				writeOutputFile(outputFilename, numberOfOutputPrefixesToSkip, d);
+				String outputfile = line.getOptionValue(OPTION_OUTPUT_FILE);
+				writeOutputFile(outputfile, numberOfLevelsToSkipInOutput, diff);
 			}
 
-
-			if (d.hasDifferences()) {
+			if (diff.hasDifferences()) {
 				if (line.hasOption(OPTION_VERBOSE)) {
-					System.out.println(d);
-					System.out.println(d.getFilename1() + " and " + d.getFilename2() + " are different.");
+					System.out.println(diff);
+					System.out.println(diff.getSource() + " and " + diff.getTarget() + " are different.");
 				}
 				if (exitWithErrorOnDiff) {
 					System.exit(EXITCODE_DIFF);
@@ -234,16 +310,24 @@ public class Main {
 			} else {
 				System.out.println("No differences found.");
 			}
+		} catch (MissingOptionException mox) {
+			StringBuilder sb = new StringBuilder("Missing required options: ");
+			for (Object option : mox.getMissingOptions()) {
+				sb.append((String)option).append(", ");
+			}
+			sb.setLength(sb.length() - 2);
+			System.err.println(sb.toString());
+			HelpFormatter formatter = new HelpFormatter();
+			formatter.printHelp("zipdiff.Main [options] ", OPTIONS);
+			System.exit(EXITCODE_ERROR);
 		} catch (ParseException pex) {
 			System.err.println(pex.getMessage());
 			HelpFormatter formatter = new HelpFormatter();
-			formatter.printHelp("zipdiff.Main [options] ", options);
+			formatter.printHelp("zipdiff.Main [options] ", OPTIONS);
 			System.exit(EXITCODE_ERROR);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			System.exit(EXITCODE_ERROR);
 		}
-
 	}
-
 }

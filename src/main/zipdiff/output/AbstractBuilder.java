@@ -17,20 +17,22 @@ import zipdiff.Differences;
  * @author Sean C. Sullivan, Hendrik Brummermann
  */
 public abstract class AbstractBuilder implements Builder {
-
-	/** number of directory prefixes to skip in the output file */
-	protected int numberOfOutputPrefixesToSkip;
+	/**
+	 * number of directory levels to skip in the output file
+	 */
+	private int numberOfOutputLevelsToSkip;
 
 	/**
 	 * builds the output
-	 *
 	 * @param filename name of output file
-	 * @param numberOfPrefixesToSkip number of directory prefixes to skip
+	 * @param numberOfLevelsToSkip number of directory levels to skip
 	 * @param d differences
 	 * @throws IOException in case of an input/output error
+	 * @see zipdiff.output.Builder#build(String, int, Differences)
 	 */
-	public void build(String filename, int numberOfPrefixesToSkip, Differences d) throws IOException {
-		this.numberOfOutputPrefixesToSkip = numberOfPrefixesToSkip;
+	public void build(String filename, int numberOfLevelsToSkip, Differences d) throws IOException {
+		this.numberOfOutputLevelsToSkip = numberOfLevelsToSkip;
+
 		OutputStream os = null;
 		if ((filename == null) || filename.equals("-")) {
 			os = System.out;
@@ -42,8 +44,15 @@ public abstract class AbstractBuilder implements Builder {
 	}
 
 	/**
+	 * Method getSkipOutputLevels.
+	 * @return int
+	 */
+	public int getSkipOutputLevels() {
+		return this.numberOfOutputLevelsToSkip;
+	}
+
+	/**
 	 * builds the output
-	 *
 	 * @param out OutputStream to write to
 	 * @param d differences
 	 */

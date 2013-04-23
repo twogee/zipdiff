@@ -16,10 +16,8 @@ import zipdiff.Differences;
  * @author Sean C. Sullivan
  */
 public class TextBuilder extends AbstractBuilder {
-
 	/**
 	 * builds the output
-	 *
 	 * @param out OutputStream to write to
 	 * @param d differences
 	 */

@@ -7,23 +7,18 @@ package zipdiff.output;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.Iterator;
 import java.util.Set;
 
 import zipdiff.Differences;
 
 /**
- *
  * Generates xml output for a Differences instance
  *
  * @author Sean C. Sullivan
- *
  */
 public class XmlBuilder extends AbstractBuilder {
-
 	/**
 	 * builds the output
-	 *
 	 * @param out OutputStream to write to
 	 * @param d differences
 	 */
@@ -32,22 +27,22 @@ public class XmlBuilder extends AbstractBuilder {
 		PrintWriter pw = new PrintWriter(out);
 
 		pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		pw.print("<zipdiff filename1=\"");
+		pw.print("<zipdiff source=\"");
 
-		String filename1 = d.getFilename1();
+		String source = d.getSource();
 
-		if (filename1 == null) {
-			filename1 = "filename1.zip";
+		if (source == null) {
+			source = "source.zip";
 		}
-		pw.print(filename1);
-		pw.print("\" filename2=\"");
+		pw.print(source);
+		pw.print("\" target=\"");
 
-		String filename2 = d.getFilename2();
+		String target = d.getTarget();
 
-		if (filename2 == null) {
-			filename2 = "filename2.zip";
+		if (target == null) {
+			target = "target.zip";
 		}
-		pw.print(filename2);
+		pw.print(target);
 		pw.println("\">");
 
 		pw.println("<differences>");
@@ -62,31 +57,24 @@ public class XmlBuilder extends AbstractBuilder {
 
 	/**
 	 * writes the list of added files
-	 *
-	 * @param pw    write to write to
+	 * @param pw write to
 	 * @param added set of added files
 	 */
-	protected void writeAdded(PrintWriter pw, Set added) {
-		Iterator iter = added.iterator();
-		while (iter.hasNext()) {
-			String key = (String) iter.next();
+	protected void writeAdded(PrintWriter pw, Set<String> added) {
+		for (String key: added) {
 			pw.print("<added>");
 			pw.print(key);
 			pw.println("</added>");
 		}
-
 	}
 
 	/**
 	 * writes the list of removed files
-	 *
-	 * @param pw    write to write to
+	 * @param pw write to
 	 * @param removed set of removed files
 	 */
-	protected void writeRemoved(PrintWriter pw, Set removed) {
-		Iterator iter = removed.iterator();
-		while (iter.hasNext()) {
-			String key = (String) iter.next();
+	protected void writeRemoved(PrintWriter pw, Set<String> removed) {
+		for (String key: removed) {
 			pw.print("<removed>");
 			pw.print(key);
 			pw.println("</removed>");
@@ -95,18 +83,14 @@ public class XmlBuilder extends AbstractBuilder {
 
 	/**
 	 * writes the list of modified files
-	 *
-	 * @param pw    write to write to
+	 * @param pw write to
 	 * @param changed set of modified files
 	 */
-	protected void writeChanged(PrintWriter pw, Set changed) {
-		Iterator iter = changed.iterator();
-		while (iter.hasNext()) {
-			String key = (String) iter.next();
+	protected void writeChanged(PrintWriter pw, Set<String> changed) {
+		for (String key: changed) {
 			pw.print("<changed>");
 			pw.print(key);
 			pw.println("</changed>");
 		}
 	}
-
 }

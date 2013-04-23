@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Header: /cvsroot/zipdiff/zipdiff/xdocs/index.xml,v 1.19 2004/06/30 07:35:24 sullis Exp $ -->
+<!-- $Header: /cvsroot-fuse/zipdiff/zipdiff/xdocs/index.xml,v 1.19 2004/06/30 07:35:24 sullis Exp $ -->
 <document>
 
   <properties>
@@ -22,13 +22,13 @@
     zipdiff is written in <a href="http://java.sun.com/">Java</a>
     </p>
     <p>
-    The current version is 0.4
+    The current version is 0.5
     </p>
   </section>
 
   <section name="Command line">
     <source>
-    java -jar zipdiff.jar -file1 foo.zip -file2 bar.zip [ -outputfile diffs.html ] [ -comparetimestamps ] [ -comparecrcvalues ]
+    java -jar zipdiff.jar --source foo.zip --target bar.zip [ --output diffs.html ] [ --comparetimestamps ] [ --comparecrcvalues ]
     </source>
   </section>
   
@@ -36,11 +36,11 @@
     <source>
 &lt;taskdef name="zipdiff" classname="zipdiff.ant.ZipDiffTask"/&gt;
 
-&lt;zipdiff filename1="foo.zip" 
-    filename2="foo2.zip"
+&lt;zipdiff source="foo.zip" 
+    target="foo2.zip"
     ignoreTimestamps="true"
     compareCRCValues="true"
-    destfile="zipdiff.xml"&gt;
+    output="zipdiff.xml"&gt;
 &lt;/zipdiff&gt;
     </source>
   </section>

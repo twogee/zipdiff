@@ -5,145 +5,173 @@
 <!-- For details, see http://ant.apache.org/                -->
 <!-- ###################################################### -->
 
-<project name="zipdiffProject" default="help" basedir=".">
-    <property file="${user.home}/build.properties" />
+<project name="zipdiff" default="help" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+    <property file="${user.home}/build.properties"/>
     <property name="src.dir" value="${basedir}/src"/>
     <property name="java.src.dir" value="${src.dir}/main"/>
     <property name="test.src.dir" value="${src.dir}/test"/>
     <property name="lib.dir" value="${basedir}/lib"/>
-    <property name="metadata.dir" value="${src.dir}/metadata" />
+    <property name="metadata.dir" value="${src.dir}/metadata"/>
     <property name="build.dir" value="${basedir}/build"/>
     <property name="javadoc.build.dir" value="${build.dir}/doc/api"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
-    <property name="distrib.name" value="zipdiff-0.4"/>
-    <property name="distrib.jar.filename" value="zipdiff.jar"/>
-    <property name="junit.jar" value="${basedir}/lib/junit.jar"/>
     <property name="junit.reports.dir" value="${basedir}/junit-reports"/>
 
-    <path id="project.class.path">
-       <pathelement location="lib/commons-cli-1.0.jar" />
-    </path>
-    
-<!-- ###################################################### -->
-<!-- target definitions                                     -->
-<!-- ###################################################### -->
+    <property name="name" value="zipdiff"/>
+    <property name="major" value="0"/>
+    <property name="minor" value="5"/>
+    <property name="distrib.name" value="${name}-${major}.${minor}"/>
+    <property name="distrib.jar.filename" value="zipdiff.jar"/>
+    <property name="distrib.ant.jar.filename" value="zipdiff-ant.jar"/>
 
-    <target name="help">
-        <echo message="ant -projecthelp will display all targets" />
-    </target>
-    
-    <target name="all" depends="init, build, docs, distrib"/>
+    <!-- Ivy -->
+    <property name="central.repo" value="http://repo1.maven.org/maven2"/>
+    <property name="ivy.version" value="2.3.0"/>
+    <property name="ivy.dir" value="${user.home}/.ivy2/cache/org.apache.ivy/jars"/>
+    <property name="ivy.jar.name" value="ivy-${ivy.version}.jar"/>
+
+    <mkdir dir="${ivy.dir}"/>
+    <get usetimestamp="true" src="https://repository.apache.org/content/repositories/releases/org/apache/ivy/ivy/${ivy.version}/${ivy.jar.name}"
+         skipexisting="true"
+         dest="${ivy.dir}/${ivy.jar.name}"/>
+    <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${ivy.dir}/${ivy.jar.name}"/>
 
     <target name="init">
-        <mkdir dir="${build.dir}" />
-        <mkdir dir="${javadoc.build.dir}" />
-        <mkdir dir="${classes.dir}" />
-        <mkdir dir="${junit.reports.dir}" />
+        <ivy:settings file="${basedir}/ivy.settings.xml"/>
+    </target>
+
+    <target name="resolve" depends="prepare">
+        <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]"
+                      conf="core"
+                      sync="true"/>
+    </target>
+
+    <path id="project.class.path">
+        <fileset dir="${lib.dir}/core" includes="*.jar"/>
+    </path>
+
+    <!-- ###################################################### -->
+    <!-- target definitions                                     -->
+    <!-- ###################################################### -->
+
+    <target name="help">
+        <echo message="ant -projecthelp will display all targets"/>
+    </target>
+
+    <target name="all" depends="distrib"/>
+
+    <target name="prepare" depends="init">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${javadoc.build.dir}"/>
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="${junit.reports.dir}"/>
     </target>
 
     <target name="clean">
-        <delete dir="${classes.dir}" />
-        <delete dir="${build.dir}" />
+        <delete dir="${classes.dir}"/>
+        <delete dir="${build.dir}"/>
     </target>
 
-    <target name="javadocs" depends="init" >
+    <target name="javadocs" depends="resolve">
         <javadoc packagenames="zipdiff.*"
-                   sourcepath="${java.src.dir}"
-                   defaultexcludes="yes"
-                   destdir="${javadoc.build.dir}"
-                   author="true"
-                   version="true"
-                   use="true"
-                   windowtitle="zipdiff" />
+                 sourcepath="${java.src.dir}"
+                 defaultexcludes="yes"
+                 destdir="${javadoc.build.dir}"
+                 author="true"
+                 version="true"
+                 use="true"
+                 classpathref="project.class.path"
+                 windowtitle="zipdiff"/>
     </target>
-    
-    <target name="docs" depends="init, javadocs"/>
 
-    <target name="project.jarfile" depends="init, build">
+    <target name="docs" depends="javadocs"/>
+
+    <target name="project.jarfile" depends="build">
         <jar destfile="${build.dir}/${distrib.jar.filename}"
-            manifest="${metadata.dir}/JAR-manifest.txt"
-            compress="true">
+             manifest="${metadata.dir}/JAR-manifest.txt"
+             compress="true">
             <fileset dir="${classes.dir}"
-                includes="zipdiff/**/*.class" />
+                     includes="zipdiff/**/*.class"/>
         </jar>
     </target>
 
-    <target name="build" depends="init">
-        <javac  deprecation="on"
-            destdir="${classes.dir}"
-            includeAntRuntime="yes"
-            classpathref="project.class.path"
-            debug="on">
-            <src path="${java.src.dir}" />
+    <target name="ant.jarfile" depends="build">
+        <jar destfile="${build.dir}/${distrib.ant.jar.filename}"
+             manifest="${metadata.dir}/Ant-JAR-manifest.txt"
+             compress="true">
+            <fileset dir="${classes.dir}">
+                <include name="zipdiff/**/*.class"/>
+                <exclude name="zipdiff/**/Main.class"/>
+            </fileset>
+        </jar>
+    </target>
+
+    <target name="build" depends="resolve">
+        <javac deprecation="on"
+               destdir="${classes.dir}"
+               includeAntRuntime="yes"
+               classpathref="project.class.path"
+               source="1.5"
+               target="1.5"
+               debug="on">
+            <src path="${java.src.dir}"/>
         </javac>
     </target>
-    
-    <target name="buildTest" depends="init, build">
-        <javac  deprecation="on"
-            destdir="${classes.dir}"
-            includeAntRuntime="yes"
-            classpathref="project.class.path"
-            debug="on">
-            <src path="${test.src.dir}" />
+
+    <target name="buildTest" depends="build">
+        <javac deprecation="on"
+               destdir="${classes.dir}"
+               includeAntRuntime="yes"
+               classpathref="project.class.path"
+               debug="on">
+            <src path="${test.src.dir}"/>
         </javac>
     </target>
-    
-    <target name="distrib-archive" depends="init, project.jarfile, copylibraries, docs">
-        <delete file="${build.dir}/${distrib.name}.zip" />
+
+    <target name="distrib" depends="ant.jarfile, project.jarfile, copylibraries, docs">
+        <delete file="${build.dir}/${distrib.name}.zip"/>
         <zip destfile="${build.dir}/${distrib.name}.zip">
-            <zipfileset dir="${build.dir}" prefix="${distrib.name}/build">
-                <include name="*.jar" />
-            	<exclude name="ant*.jar" />
-            	<exclude name="junit*.jar" />
-             </zipfileset>
              <zipfileset dir="${src.dir}" prefix="${distrib.name}/src">
-                <include name="**/*.java" />
-                <include name="**/*.html" />
-                <include name="**/*.txt" />
-                <include name="**/*.xml" />
-                <include name="**/*.properties" />
+                <include name="**/*.java"/>
+                <include name="**/*.html"/>
+                <include name="**/*.txt"/>
+                <include name="**/*.xml"/>
+                <include name="**/*.properties"/>
              </zipfileset>
              <zipfileset dir="${basedir}" prefix="${distrib.name}">
-                <include name="build.xml" />
-             </zipfileset>
-             <zipfileset dir="${basedir}" prefix="${distrib.name}">
-                <include name="readme.txt" />
-                <include name="*LICENSE*" />
-                <include name="NOTICE.txt" />
-             </zipfileset>
-             <zipfileset dir="${lib.dir}" prefix="${distrib.name}">
-                <include name="*LICENSE*" />
+                <include name="build.xml"/>
+                <include name="ivy*.xml"/>
+                <include name="readme.txt"/>
+                <include name="*LICENSE*"/>
+                <include name="NOTICE.txt"/>
              </zipfileset>
         </zip>
     </target>
 
-    <target name="copylibraries" depends="init">
+    <target name="copylibraries" depends="resolve">
         <copy todir="${build.dir}">
-            <fileset dir="${lib.dir}">
-                <include name="*.jar" />
+            <fileset dir="${lib.dir}/core">
+                <include name="*.jar"/>
             </fileset>
         </copy>
     </target>
-    
-    <target name="tests" depends="init, buildTest">
+
+    <target name="tests" depends="buildTest">
         <junit printsummary="yes" haltonfailure="yes">
-          <classpath>
-            <pathelement location="${classes.dir}" />
-            <pathelement path="${java.class.path}" />
-          </classpath>
-        
-          <formatter type="plain" />
-        
-          <batchtest fork="yes" todir="${junit.reports.dir}">
-            <fileset dir="${test.src.dir}">
-              <include name="**/*Test*.java" />
-              <exclude name="**/AllTests.java" />
-            </fileset>
-          </batchtest>
+            <classpath>
+                <pathelement refid="project.class.path"/>
+                <pathelement location="${classes.dir}"/>
+                <pathelement path="${java.class.path}"/>
+            </classpath>
+
+            <formatter type="plain"/>
+
+            <batchtest fork="yes" todir="${junit.reports.dir}">
+                <fileset dir="${test.src.dir}">
+                    <include name="**/*Test*.java"/>
+                    <exclude name="**/AllTests.java"/>
+                </fileset>
+            </batchtest>
         </junit>
     </target>
-    
-    <target name="distrib" depends="init, distrib-archive">
-    </target>
-            
 </project>

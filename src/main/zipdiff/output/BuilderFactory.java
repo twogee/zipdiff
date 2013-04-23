@@ -11,10 +11,8 @@ package zipdiff.output;
  * @author Hendrik Brummermann, HIS GmbH
  */
 public class BuilderFactory {
-
 	/**
 	 * creates a builder based on the name of the output file
-	 *
 	 * @param filename name of output file
 	 * @return Builder
 	 */
@@ -23,23 +21,19 @@ public class BuilderFactory {
 
 		if ((filename == null) || filename.equals("-")) {
 			builder = new TextBuilder();
-
 		} else if (filename.endsWith(".html")) {
 			builder = new HtmlBuilder();
-
 		} else if (filename.endsWith(".txt")) {
 			builder = new TextBuilder();
-
 		} else if (filename.endsWith(".xml")) {
 			builder = new XmlBuilder();
-
 		} else if (filename.endsWith(".zip")) {
 			builder = new ZipBuilder();
-
 		} else {
 			System.err.println("Unknown extension, using text output");
 			builder = new TextBuilder();
 		}
+
 		return builder;
 	}
 }
