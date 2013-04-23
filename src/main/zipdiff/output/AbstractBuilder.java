@@ -5,6 +5,7 @@
  */
 package zipdiff.output;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -37,7 +38,16 @@ public abstract class AbstractBuilder implements Builder {
 		if ((filename == null) || filename.equals("-")) {
 			os = System.out;
 		} else {
-			os = new FileOutputStream(filename);
+			File file = new File(filename);
+			if (file.isDirectory()) {
+				System.err.println("File \"" + filename + "\" is a directory, using stdout instead");
+				os = System.out;
+			} else if (file.exists() && !file.canWrite()) {
+				System.err.println("Cannot write to \"" + filename + "\", using stdout instead");
+				os = System.out;
+			} else {
+				os = new FileOutputStream(filename);
+			}
 		}
 		build(os, d);
 		os.flush();

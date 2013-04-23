@@ -5,7 +5,7 @@
   <info organisation="zipdiff"
         module="zipdiff"
         revision="${version}">
-    <description homepage="http://www.jboss.org/zipdiff">
+    <description homepage="https://github.com/nhnb/zipdiff">
       Zipdiff - an archive diff tool
     </description>
   </info>
