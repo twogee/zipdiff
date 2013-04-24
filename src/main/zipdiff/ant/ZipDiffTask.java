@@ -102,11 +102,11 @@ public class ZipDiffTask extends Task {
 	}
 
 	public void setIgnoreTimestamps(Boolean b) {
-		log("!! Attribute ignoretimestamps is deprecated.   !!", Project.MSG_WARN);
-		log("!! Use the comparetimetamps attribute instead. !!", Project.MSG_WARN);
+		log("!! Attribute ignoretimestamps is deprecated.    !!", Project.MSG_WARN);
+		log("!! Use the comparetimestamps attribute instead. !!", Project.MSG_WARN);
 		this.compareTimestamps = !b;
 	}
-	
+
 	/**
 	 * Method setSource.
 	 * @param name String
