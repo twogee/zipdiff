@@ -57,19 +57,19 @@ public class ZipDiffTask extends Task {
 	private String output = "-";
 
 	/**
-	 * Field ignoreTimestamps.
+	 * Field compareTimestamps.
 	 */
-	private boolean ignoreTimestamps = false;
+	private boolean compareTimestamps = false;
 
 	/**
-	 * Field ignoreCVSFiles.
+	 * Field excludeCVSFiles.
 	 */
-	private boolean ignoreCVSFiles = false;
+	private boolean excludeCVSFiles = false;
 
 	/**
 	 * Field compareCRCValues.
 	 */
-	private boolean compareCRCValues = true;
+	private boolean compareCRCValues = false;
 
 	/**
 	 * Field patterns.
@@ -84,23 +84,29 @@ public class ZipDiffTask extends Task {
 	// Backwards compatibility stuff
 
 	public void setFilename1(String name) {
-        log("!! Attribute filename1 is deprecated. !!", Project.MSG_WARN);
-        log("!! Use the source attribute instead.  !!", Project.MSG_WARN);
+		log("!! Attribute filename1 is deprecated. !!", Project.MSG_WARN);
+		log("!! Use the source attribute instead.  !!", Project.MSG_WARN);
 		this.source = name;
 	}
 
 	public void setFilename2(String name) {
-        log("!! Attribute filename2 is deprecated. !!", Project.MSG_WARN);
-        log("!! Use the target attribute instead.  !!", Project.MSG_WARN);
+		log("!! Attribute filename2 is deprecated. !!", Project.MSG_WARN);
+		log("!! Use the target attribute instead.  !!", Project.MSG_WARN);
 		this.target = name;
 	}
 
 	public void setDestFile(String name) {
-        log("!! Attribute destfile is deprecated. !!", Project.MSG_WARN);
-        log("!! Use the output attribute instead. !!", Project.MSG_WARN);
+		log("!! Attribute destfile is deprecated. !!", Project.MSG_WARN);
+		log("!! Use the output attribute instead. !!", Project.MSG_WARN);
 		this.output = name;
 	}
 
+	public void setIgnoreTimestamps(Boolean b) {
+		log("!! Attribute ignoretimestamps is deprecated.   !!", Project.MSG_WARN);
+		log("!! Use the comparetimetamps attribute instead. !!", Project.MSG_WARN);
+		this.compareTimestamps = !b;
+	}
+	
 	/**
 	 * Method setSource.
 	 * @param name String
@@ -166,35 +172,35 @@ public class ZipDiffTask extends Task {
 	}
 
 	/**
-	 * Method getIgnoreTimestamps.
+	 * Method getCompareTimestamps.
 	 * @return boolean
 	 */
-	public boolean getIgnoreTimestamps() {
-		return this.ignoreTimestamps;
+	public boolean getCompareTimestamps() {
+		return this.compareTimestamps;
 	}
 
 	/**
-	 * Method setIgnoreTimestamps.
+	 * Method setCompareTimestamps.
 	 * @param b boolean
 	 */
-	public void setIgnoreTimestamps(boolean b) {
-		this.ignoreTimestamps = b;
+	public void setCompareTimestamps(boolean b) {
+		this.compareTimestamps = b;
 	}
 
 	/**
-	 * Method getIgnoreCVSFiles.
+	 * Method getExcludeCVSFiles.
 	 * @return boolean
 	 */
-	public boolean getIgnoreCVSFiles() {
-		return this.ignoreCVSFiles;
+	public boolean getExcludeCVSFiles() {
+		return this.excludeCVSFiles;
 	}
 
 	/**
-	 * Method setIgnoreCVSFiles.
+	 * Method setExcludeCVSFiles.
 	 * @param b boolean
 	 */
-	public void setIgnoreCVSFiles(boolean b) {
-		this.ignoreCVSFiles = b;
+	public void setExcludeCVSFiles(boolean b) {
+		this.excludeCVSFiles = b;
 	}
 
 	/**
@@ -310,9 +316,9 @@ public class ZipDiffTask extends Task {
 			calculator.setNumberOfSourceLevelsToSkip(getSkipSourceLevels());
 			calculator.setNumberOfTargetLevelsToSkip(getSkipTargetLevels());
 			calculator.setCompareCRCValues(getCompareCRCValues());
-			calculator.setIgnoreTimestamps(getIgnoreTimestamps());
-			calculator.setIgnoreCVSFiles(getIgnoreCVSFiles());
-			calculator.setFilenameRegexToIgnore(getExludeRegexp());
+			calculator.setCompareTimestamps(getCompareTimestamps());
+			calculator.setExcludeCVSFiles(getExcludeCVSFiles());
+			calculator.setExcludeRegex(getExludeRegexp());
 
 			diff = calculator.getDifferences();
 		} catch (IOException ex) {

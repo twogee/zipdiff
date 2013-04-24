@@ -53,10 +53,10 @@ public class Main {
 	private static final String OPTION_COMPARE_TIMESTAMPS = "comparetimestamps";
 
 	/**
-	 * Field OPTION_IGNORE_CVS_FILES.
-	 * (value is ""ignorecvsfiles"")
+	 * Field OPTION_EXCLUDE_CVS_FILES.
+	 * (value is ""excludecvsfiles"")
 	 */
-	private static final String OPTION_IGNORE_CVS_FILES = "ignorecvsfiles";
+	private static final String OPTION_EXCLUDE_CVS_FILES = "excludecvsfiles";
 
 	/**
 	 * Field OPTION_OUTPUT_FILE.
@@ -95,10 +95,10 @@ public class Main {
 	private static final String OPTION_SKIP_TARGET_LEVELS = "skiptargetlevels";
 
 	/**
-	 * Field OPTION_REGEX.
+	 * Field OPTION_EXCLUDE_REGEX.
 	 * (value is ""excluderegex"")
 	 */
-	private static final String OPTION_REGEX = "excluderegex";
+	private static final String OPTION_EXCLUDE_REGEX = "excluderegex";
 
 	/**
 	 * Field OPTION_ERROR_ON_DIFF.
@@ -157,13 +157,13 @@ public class Main {
 		outputFileOption.setRequired(false);
 
 		Option regex =
-			new Option(OPTION_REGEX, OPTION_REGEX, true,
+			new Option(OPTION_EXCLUDE_REGEX, OPTION_EXCLUDE_REGEX, true,
                        "regular expression to exclude matching files e.g. (?i)meta-inf.*");
 		regex.setRequired(false);
 
-		Option ignoreCVSFilesOption =
-			new Option(OPTION_IGNORE_CVS_FILES, OPTION_IGNORE_CVS_FILES, false, "ignore CVS files");
-		ignoreCVSFilesOption.setRequired(false);
+		Option excludeCVSFilesOption =
+			new Option(OPTION_EXCLUDE_CVS_FILES, OPTION_EXCLUDE_CVS_FILES, false, "exclude CVS files");
+		excludeCVSFilesOption.setRequired(false);
 
 		Option exitWithError =
 			new Option(OPTION_ERROR_ON_DIFF, OPTION_ERROR_ON_DIFF, false,
@@ -180,7 +180,7 @@ public class Main {
 		OPTIONS.addOption(numberOfLevelsToSkipInSource);
 		OPTIONS.addOption(numberOfLevelsToSkipInTarget);
 		OPTIONS.addOption(regex);
-		OPTIONS.addOption(ignoreCVSFilesOption);
+		OPTIONS.addOption(excludeCVSFilesOption);
 		OPTIONS.addOption(exitWithError);
 		OPTIONS.addOption(verboseOption);
 		OPTIONS.addOption(outputFileOption);
@@ -267,24 +267,24 @@ public class Main {
 				calc.setCompareCRCValues(false);
 			}
 
-			if (line.hasOption(OPTION_IGNORE_CVS_FILES)) {
-				calc.setIgnoreCVSFiles(true);
+			if (line.hasOption(OPTION_EXCLUDE_CVS_FILES)) {
+				calc.setExcludeCVSFiles(true);
 			} else {
-				calc.setIgnoreCVSFiles(false);
+				calc.setExcludeCVSFiles(false);
 			}
 
 			if (line.hasOption(OPTION_COMPARE_TIMESTAMPS)) {
-				calc.setIgnoreTimestamps(false);
+				calc.setCompareTimestamps(true);
 			} else {
-				calc.setIgnoreTimestamps(true);
+				calc.setCompareTimestamps(false);
 			}
 
-			if (line.hasOption(OPTION_REGEX)) {
-				String regularExpression = line.getOptionValue(OPTION_REGEX);
+			if (line.hasOption(OPTION_EXCLUDE_REGEX)) {
+				String regularExpression = line.getOptionValue(OPTION_EXCLUDE_REGEX);
 				Set<String> regexSet = new HashSet<String>();
 				regexSet.add(regularExpression);
 
-				calc.setFilenameRegexToIgnore(regexSet);
+				calc.setExcludeRegex(regexSet);
 			}
 
 			boolean exitWithErrorOnDiff = false;

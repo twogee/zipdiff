@@ -1,4 +1,4 @@
-ZipDiff compares two .zip (.jar, .war, .jar) files and creates a list of differences.
+ZipDiff compares two .zip (.jar, .war, .ear, .rar) files and creates a list of differences.
 Plain text, .xml, .html and even a .zip file are supported as output formats.
 
 ZipDiff can be executed as command line tool or Ant task.
@@ -11,9 +11,10 @@ java -jar zipdiff.jar --source foo.zip --target bar.zip [options]
 
 Valid options are:
 
---comparecrcvalues     compares the crc values instead of the file content
---comparetimestamps    compares timestamps instead of file content
---ignorecvsfiles       ignores differences in CVS folders
+--comparecrcvalues     compares the CRC values in addition to file size
+--comparetimestamps    compares timestamps in addition to file size
+--excluderegex <regex> excludes file name matching regex from comparison
+--excludecvsfiles      excludes CVS folders from comparison
 --output <name>        name of the output file
 --skipoutputlevels <n> number of path segment to skip in the output file
 --skipsourcelevels <n> number of path segment to skip in the source file

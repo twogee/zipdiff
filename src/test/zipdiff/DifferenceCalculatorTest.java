@@ -296,7 +296,7 @@ public class DifferenceCalculatorTest {
 		createJarOneEntryA1();
 		createJarOneEntryAContentsChanged();
 		DifferenceCalculator calc = new DifferenceCalculator(testJarOneEntryA1Filename, testJarOneEntryAContentsChangedFilename);
-		calc.setIgnoreCVSFiles(true);
+		calc.setExcludeCVSFiles(true);
 		Differences differences = calc.getDifferences();
 		assertTrue(differences.hasDifferences());
 		Map<String, ZipEntry[]> addedEntries = differences.getAdded();

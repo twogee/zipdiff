@@ -58,14 +58,14 @@ public class DifferenceCalculator {
 	private int numberOfTargetLevelsToSkip = 0;
 
 	/**
-	 * Field ignoreTimestamps.
+	 * Field compareTimestamps.
 	 */
-	private boolean ignoreTimestamps = false;
+	private boolean compareTimestamps = false;
 
 	/**
-	 * Field ignoreCVSFiles.
+	 * Field excludeCVSFiles.
 	 */
-	private boolean ignoreCVSFiles = false;
+	private boolean excludeCVSFiles = false;
 
 	/**
 	 * Field compareCRCValues.
@@ -73,9 +73,9 @@ public class DifferenceCalculator {
 	private boolean compareCRCValues = true;
 
 	/**
-	 * Field filesToIgnorePattern.
+	 * Field excludePattern.
 	 */
-	private Pattern filesToIgnorePattern;
+	private Pattern excludePattern;
 
 	/**
 	 * Field bVerbose.
@@ -87,7 +87,7 @@ public class DifferenceCalculator {
 	 * @param msg Object
 	 */
 	protected void debug(Object msg) {
-		if (isVerboseEnabled()) {
+		if (isVerbose()) {
 			System.out.println("[" + DifferenceCalculator.class.getName() + "] " + String.valueOf(msg));
 		}
 	}
@@ -104,7 +104,7 @@ public class DifferenceCalculator {
 	 * Method isVerboseEnabled.
 	 * @return boolean
 	 */
-	protected boolean isVerboseEnabled() {
+	protected boolean isVerbose() {
 		return bVerbose;
 	}
 
@@ -143,11 +143,11 @@ public class DifferenceCalculator {
 	 * @param patterns A Set of regular expressions that exclude a ZipEntry from comparison if matched.
 	 * @see java.util.regex
 	 */
-	public void setFilenameRegexToIgnore(Set<String> patterns) {
+	public void setExcludeRegex(Set<String> patterns) {
 		if (patterns == null) {
-			filesToIgnorePattern = null;
+			excludePattern = null;
 		} else if (patterns.isEmpty()) {
-			filesToIgnorePattern = null;
+			excludePattern = null;
 		} else {
 			String regex = "";
 
@@ -157,32 +157,36 @@ public class DifferenceCalculator {
 				}
 				regex += "(" + pattern + ")";
 			}
-			filesToIgnorePattern = Pattern.compile(regex);
+			excludePattern = Pattern.compile(regex);
 			logger.log(Level.FINE, "Regular expression is : " + regex);
 		}
 	}
 
 	/**
-	 * Returns true if fileToIgnorePattern matches the given entryName
+	 * Returns true if excludePattern matches the given entryName
 	 * @param filepath
-	 * @param entryName The name of ZipEntry to be checked if it should be ignored.
-	 * @return true if the ZipEntry should be ignored.
+	 * @param entryName The name of ZipEntry to be checked if it should be excluded.
+	 * @return true if the ZipEntry should be excluded.
 	 */
-	protected boolean ignoreThisFile(String filepath, String entryName) {
+	protected boolean excludeThisFile(String filepath, String entryName) {
 		if (entryName == null) {
 			return false;
-		} else if (isCVSFile(filepath, entryName) && (ignoreCVSFiles())) {
-			return true;
-		} else if (filesToIgnorePattern == null) {
-			return false;
-		} else {
-			Matcher matcher = filesToIgnorePattern.matcher(entryName);
-			boolean match = matcher.matches();
-			if (match) {
-				logger.log(Level.FINEST, "Found a match against : " + entryName + " so excluding");
-			}
-			return match;
 		}
+
+		if (isCVSFile(filepath, entryName) && (excludeCVSFiles())) {
+			return true;
+		}
+
+		if (excludePattern == null) {
+			return false;
+		}
+
+		Matcher matcher = excludePattern.matcher(entryName);
+		boolean match = matcher.matches();
+		if (match) {
+			logger.log(Level.FINEST, "Found a match against : " + entryName + " so excluding");
+		}
+		return match;
 	}
 
 	/**
@@ -194,11 +198,13 @@ public class DifferenceCalculator {
 	protected boolean isCVSFile(String filepath, String entryName) {
 		if (entryName == null) {
 			return false;
-		} else if ((filepath.indexOf("CVS/") != -1) || (entryName.indexOf("CVS/") != -1)) {
-			return true;
-		} else {
-			return false;
 		}
+
+		if ((filepath.indexOf("CVS/") != -1) || (entryName.indexOf("CVS/") != -1)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -213,7 +219,7 @@ public class DifferenceCalculator {
 	 * Returns value of CRC check flag
 	 * @return true if this instance will check the CRCs of each ZipEntry
 	 */
-	public boolean getCompareCRCValues() {
+	public boolean isComparingCRCValues() {
 		return compareCRCValues;
 	}
 
@@ -325,7 +331,7 @@ public class DifferenceCalculator {
 	 * @throws IOException
 	 */
 	protected void processZipEntry(String prefix, ZipEntry zipEntry, InputStream is, Map<String, ZipEntry> zipEntryMap, int nl) throws IOException {
-		if (ignoreThisFile(prefix, zipEntry.getName())) {
+		if (excludeThisFile(prefix, zipEntry.getName())) {
 			logger.log(Level.FINE, "ignoring file: " + zipEntry.getName());
 		} else {
 			String name = StringUtil.removeDirectoryPrefix(prefix + zipEntry.getName(), nl);
@@ -362,33 +368,25 @@ public class DifferenceCalculator {
 	}
 
 	/**
-	 * Returns true if the filename has a valid zip extension (i.e. jar, war, ear, zip, etc.)
+	 * Returns true if the filename has a valid zip extension (i.e. jar, war, ear, rar, zip)
 	 * @param filename The name of the file to check.
 	 * @return true if it has a valid extension.
 	 */
 	public static boolean isZipFile(String filename) {
-		boolean result;
-
 		if (filename == null) {
-			result = false;
-		} else {
-			String lowercaseName = filename.toLowerCase();
-			if (lowercaseName.endsWith(".zip")) {
-				result = true;
-			} else if (lowercaseName.endsWith(".ear")) {
-				result = true;
-			} else if (lowercaseName.endsWith(".war")) {
-				result = true;
-			} else if (lowercaseName.endsWith(".rar")) {
-				result = true;
-			} else if (lowercaseName.endsWith(".jar")) {
-				result = true;
-			} else {
-				result = false;
-			}
+			return false;
 		}
 
-		return result;
+		String lowercaseName = filename.toLowerCase();
+		if (lowercaseName.endsWith(".zip")
+			|| lowercaseName.endsWith(".ear")
+			|| lowercaseName.endsWith(".war")
+			|| lowercaseName.endsWith(".rar")
+			|| lowercaseName.endsWith(".jar")) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -440,7 +438,7 @@ public class DifferenceCalculator {
 		allNames.addAll(targetnames);
 
 		for (String name: allNames) {
-			if (ignoreThisFile("", name)) {
+			if (excludeThisFile("", name)) {
 				// do nothing
 			} else if (sourcenames.contains(name) && (!targetnames.contains(name))) {
 				diff.fileRemoved(name, sourcemap.get(name));
@@ -475,11 +473,11 @@ public class DifferenceCalculator {
 				&& (srcentry.getSize() == trgentry.getSize())
 				&& (srcentry.getCompressedSize() == trgentry.getCompressedSize());
 
-		if (!isIgnoringTimestamps()) {
+		if (isComparingTimestamps()) {
 			result = result && (srcentry.getTime() == trgentry.getTime());
 		}
 
-		if (getCompareCRCValues()) {
+		if (isComparingCRCValues()) {
 			result = result && (srcentry.getCrc() == trgentry.getCrc());
 		}
 
@@ -487,35 +485,35 @@ public class DifferenceCalculator {
 	}
 
 	/**
-	 * Method setIgnoreTimestamps.
+	 * Method setCompareTimestamps.
 	 * @param b boolean
 	 */
-	public void setIgnoreTimestamps(boolean b) {
-		ignoreTimestamps = b;
+	public void setCompareTimestamps(boolean b) {
+		compareTimestamps = b;
 	}
 
 	/**
-	 * Method isIgnoringTimestamps.
+	 * Method isComparingTimestamps.
 	 * @return boolean
 	 */
-	public boolean isIgnoringTimestamps() {
-		return ignoreTimestamps;
+	public boolean isComparingTimestamps() {
+		return compareTimestamps;
 	}
 
 	/**
-	 * Method ignoreCVSFiles.
+	 * Method excludeCVSFiles.
 	 * @return boolean
 	 */
-	public boolean ignoreCVSFiles() {
-		return ignoreCVSFiles;
+	public boolean excludeCVSFiles() {
+		return excludeCVSFiles;
 	}
 
 	/**
-	 * Method setIgnoreCVSFiles.
+	 * Method setExcludeCVSFiles.
 	 * @param b boolean
 	 */
-	public void setIgnoreCVSFiles(boolean b) {
-		ignoreCVSFiles = b;
+	public void setExcludeCVSFiles(boolean b) {
+		excludeCVSFiles = b;
 	}
 
 	/**

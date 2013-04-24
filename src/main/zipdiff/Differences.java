@@ -31,9 +31,9 @@ public class Differences {
 	private final Map<String, ZipEntry[]> changed = new TreeMap<String, ZipEntry[]>();
 
 	/**
-	 * Field ignored.
+	 * Field excluded.
 	 */
-	private final Map<String, ZipEntry[]> ignored = new TreeMap<String, ZipEntry[]>();
+	private final Map<String, ZipEntry[]> excluded = new TreeMap<String, ZipEntry[]>();
 
 	/**
 	 * Field source.
@@ -103,12 +103,12 @@ public class Differences {
 	}
 
 	/**
-	 * Method fileIgnored.
+	 * Method fileExcluded.
 	 * @param fqn String
 	 * @param ze ZipEntry
 	 */
-	public void fileIgnored(String fqn, ZipEntry ze) {
-		this.ignored.put(fqn, new ZipEntry[] {ze});
+	public void fileExcluded(String fqn, ZipEntry ze) {
+		this.excluded.put(fqn, new ZipEntry[] {ze});
 	}
 
 	/**
@@ -146,11 +146,11 @@ public class Differences {
 	}
 
 	/**
-	 * Method getIgnored.
+	 * Method getExcluded.
 	 * @return Map<String,ZipEntry[]>
 	 */
-	public Map<String, ZipEntry[]> getIgnored() {
-		return this.ignored;
+	public Map<String, ZipEntry[]> getExcluded() {
+		return this.excluded;
 	}
 
 	/**
