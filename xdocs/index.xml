@@ -37,17 +37,14 @@
   </section>
   
   <section name="Using the Ant zipdiff task">
-    <source>&lt;taskdef name="zipdiff" classname="zipdiff.ant.ZipDiffTask"/&gt;
-
-&lt;zipdiff source="foo.zip" 
-    target="bar.zip"
-    compareTimestamps="false"
-    compareCRCValues="true"
-    output="zipdiff.xml"&gt;
-&lt;/zipdiff&gt;</source>
+    <source><![CDATA[<taskdef name="zipdiff" classname="zipdiff.ant.ZipDiffTask"/>]]></source>
+    <source><![CDATA[<zipdiff source="foo.zip" target="bar.zip" compareTimestamps="false" compareCRCValues="true" output="zipdiff.xml"/>]]></source>
   </section>
 
-  <section name="All options">
+  <section name="All options and task attributes">
+    <p>
+      CLI options and Ant task attributes have the same names when available.
+    </p>
     <dl>
       <dt>source</dt>
       <dd>source file, required</dd>
@@ -73,6 +70,8 @@
       <dd>exit with error code if a difference is found (CLI only), default false</dd>
       <dt>verbose</dt>
       <dd>extra debug messages (CLI only), default false</dd>
+      <dt>property</dt>
+      <dd>set a previously unset Ant property to "true" if a difference is found (Ant only)</dd>
     </dl>
   </section>
 
