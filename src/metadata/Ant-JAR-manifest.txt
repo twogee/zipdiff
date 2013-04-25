@@ -1,2 +1,2 @@
 Manifest-Version: 1.0
-Created-By:  Sean C. Sullivan
+Created-By: Sean C. Sullivan

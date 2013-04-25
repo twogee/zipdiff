@@ -20,11 +20,13 @@
     <property name="junit.reports.dir" value="${basedir}/junit-reports"/>
 
     <property name="name" value="zipdiff"/>
+    <property name="name.ant" value="${name}-ant"/>
     <property name="major" value="0"/>
     <property name="minor" value="5"/>
-    <property name="distrib.name" value="${name}-${major}.${minor}"/>
-    <property name="distrib.jar.filename" value="zipdiff.jar"/>
-    <property name="distrib.ant.jar.filename" value="zipdiff-ant.jar"/>
+    <property name="version" value="${major}.${minor}"/>
+    <property name="distrib.name" value="${name}-${version}"/>
+    <property name="distrib.jar.filename" value="${name}.jar"/>
+    <property name="distrib.jar.ant.filename" value="${name.ant}.jar"/>
 
     <!-- Ivy -->
     <property name="central.repo" value="http://repo1.maven.org/maven2"/>
@@ -89,7 +91,7 @@
                  version="true"
                  use="true"
                  classpathref="project.class.path"
-                 windowtitle="zipdiff"/>
+                 windowtitle="${name}"/>
     </target>
 
     <target name="xdocs" depends="resolve">
@@ -121,15 +123,27 @@
         <jar destfile="${build.dir}/${distrib.jar.filename}"
              manifest="${metadata.dir}/JAR-manifest.txt"
              compress="true">
+            <manifest>
+                <section name="${name}">
+                    <attribute name="Implementation-Title" value="${name}"/>
+                    <attribute name="Implementation-Version" value="${version}"/> 
+                </section>
+            </manifest>
             <fileset dir="${classes.dir}"
                      includes="zipdiff/**/*.class"/>
         </jar>
     </target>
 
     <target name="ant.jarfile" depends="build">
-        <jar destfile="${build.dir}/${distrib.ant.jar.filename}"
+        <jar destfile="${build.dir}/${distrib.jar.ant.filename}"
              manifest="${metadata.dir}/Ant-JAR-manifest.txt"
              compress="true">
+            <manifest>
+                <section name="${name.ant}">
+                    <attribute name="Implementation-Title" value="${name.ant}"/>
+                    <attribute name="Implementation-Version" value="${version}"/> 
+                </section>
+            </manifest>
             <fileset dir="${classes.dir}">
                 <include name="zipdiff/**/*.class"/>
                 <exclude name="zipdiff/**/Main.class"/>

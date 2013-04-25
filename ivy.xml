@@ -3,7 +3,7 @@
             xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
 
   <info organisation="zipdiff"
-        module="zipdiff"
+        module="${name}"
         revision="${version}">
     <description homepage="https://github.com/nhnb/zipdiff">
       Zipdiff - an archive diff tool
