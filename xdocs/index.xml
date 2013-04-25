@@ -46,31 +46,31 @@
       CLI options and Ant task attributes have the same names when available.
     </p>
     <dl>
-      <dt>source</dt>
+      <dt><source>source</source></dt>
       <dd>source file, required</dd>
-      <dt>target</dt>
+      <dt><source>target</source></dt>
       <dd>target file, required</dd>
-      <dt>output</dt>
+      <dt><source>output</source></dt>
       <dd>output file, default stdout; file extension defines output format, default text</dd>
-      <dt>comparetimestamps</dt>
+      <dt><source>comparetimestamps</source></dt>
       <dd>compary zip entry timestamps, default false</dd>
-      <dt>comparecrcvalues</dt>
+      <dt><source>comparecrcvalues</source></dt>
       <dd>compare zip entry CRCs, default false</dd>
-      <dt>skipsourcelevels</dt>
+      <dt><source>skipsourcelevels</source></dt>
       <dd>remove directory prefixes corresponding to <em>n</em> levels from source zip entry names before comparison, default 0</dd>
-      <dt>skiptargetlevels</dt>
+      <dt><source>skiptargetlevels</source></dt>
       <dd>remove directory prefixes corresponding to <em>n</em> levels from target zip entry names before comparison, default 0</dd>
-       <dt>skipoutputlevels</dt>
+       <dt><source>skipoutputlevels</source></dt>
       <dd>remove directory prefixes corresponding to <em>n</em> levels from output zip entry names (only supported for zip output), default 0</dd>
-      <dt>excluderegex</dt>
+      <dt><source>excluderegex</source></dt>
       <dd>exclude zip entry names matching a regexp from comparison, default none</dd>
-      <dt>excludecvsfiles</dt>
+      <dt><source>excludecvsfiles</source></dt>
       <dd>exclude CVS control files (zip entry names matching "CVS/") from comparison, default false</dd>
-      <dt>errorondifference</dt>
+      <dt><source>errorondifference</source></dt>
       <dd>exit with error code if a difference is found (CLI only), default false</dd>
-      <dt>verbose</dt>
+      <dt><source>verbose</source></dt>
       <dd>extra debug messages (CLI only), default false</dd>
-      <dt>property</dt>
+      <dt><source>property</source></dt>
       <dd>set a previously unset Ant property to "true" if a difference is found (Ant only)</dd>
     </dl>
   </section>
