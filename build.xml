@@ -95,7 +95,7 @@
     <target name="xdocs" depends="resolve">
         <for param="xdoc.source">
             <path>
-                <fileset dir="${xdocs.dir}" includes="*.xml"/>
+                <fileset dir="${xdocs.dir}" includes="*.xml" excludes="navigation.xml"/>
             </path>
             <sequential>
                 <propertyregex property="xdoc.html" input="@{xdoc.source}"
@@ -110,6 +110,9 @@
                 </java>
             </sequential>
         </for>
+        <copy todir="${xdocs.build.dir}">
+            <fileset dir="${xdocs.dir}" includes="*.html"/>
+        </copy>
     </target>
 
     <target name="docs" depends="javadocs, xdocs"/>
