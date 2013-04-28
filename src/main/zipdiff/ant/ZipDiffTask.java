@@ -279,8 +279,8 @@ public class ZipDiffTask extends Task {
 		// log("Output=" + getOutput(), Project.MSG_DEBUG);
 
 		Differences diff = calculateDifferences();
-		if (!"".equals(property) && null == getProject().getProperty(property) && diff.hasDifferences()) {
-			getProject().setNewProperty(property, "true");
+		if (!"".equals(this.property) && null == getProject().getProperty(this.property) && diff.hasDifferences()) {
+			getProject().setNewProperty(this.property, "true");
 		}
 
 		try {
@@ -307,12 +307,10 @@ public class ZipDiffTask extends Task {
 	 * @throws BuildException in case of an input/output error
 	 */
 	protected Differences calculateDifferences() throws BuildException {
-		DifferenceCalculator calculator;
-
 		Differences diff = null;
 
 		try {
-			calculator = new DifferenceCalculator(this.source, this.target);
+			DifferenceCalculator calculator = new DifferenceCalculator(this.source, this.target);
 			calculator.setNumberOfSourceLevelsToSkip(getSkipSourceLevels());
 			calculator.setNumberOfTargetLevelsToSkip(getSkipTargetLevels());
 			calculator.setCompareCRCValues(getCompareCRCValues());

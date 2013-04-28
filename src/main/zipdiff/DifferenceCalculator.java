@@ -466,9 +466,7 @@ public class DifferenceCalculator {
 	 * @return true if the entries are equivalent.
 	 */
 	protected boolean entriesMatch(ZipEntry srcentry, ZipEntry trgentry) {
-		boolean result;
-
-		result =
+		boolean result =
 			(srcentry.isDirectory() == trgentry.isDirectory())
 				&& (srcentry.getSize() == trgentry.getSize())
 				&& (srcentry.getCompressedSize() == trgentry.getCompressedSize());
