@@ -37,19 +37,19 @@ public class ZipDiffTask extends Task {
 	private String target;
 	
 	/**
-	 * Field numberOfOutputLevelsToSkip.
+	 * Field numberOfOutputLevelsToTrim.
 	 */
-	private int numberOfOutputLevelsToSkip = 0;
+	private int numberOfOutputLevelsToTrim = 0;
 
 	/**
-	 * Field numberOfSourceLevelsToSkip.
+	 * Field numberOfSourceLevelsToTrim.
 	 */
-	private int numberOfSourceLevelsToSkip = 0;
+	private int numberOfSourceLevelsToTrim = 0;
 
 	/**
-	 * Field numberOfTargetLevelsToSkip.
+	 * Field numberOfTargetLevelsToTrim.
 	 */
-	private int numberOfTargetLevelsToSkip = 0;
+	private int numberOfTargetLevelsToTrim = 0;
 
 	/**
 	 * Field output.
@@ -124,51 +124,51 @@ public class ZipDiffTask extends Task {
 	}
 
 	/**
-	 * Method getSkipOutputLevels.
+	 * Method getTrimOutputLevels.
 	 * @return int
 	 */
-	public int getSkipOutputLevels() {
-		return this.numberOfOutputLevelsToSkip;
+	public int getTrimOutputLevels() {
+		return this.numberOfOutputLevelsToTrim;
 	}
 
 	/**
-	 * Method setSkipOutputLevels.
-	 * @param numberOfLevelsToSkip int
+	 * Method setTrimOutputLevels.
+	 * @param numberOfLevelsToTrim int
 	 */
-	public void setSkipOutputLevels(int numberOfLevelsToSkip) {
-		this.numberOfOutputLevelsToSkip = numberOfLevelsToSkip;
+	public void setTrimOutputLevels(int numberOfLevelsToTrim) {
+		this.numberOfOutputLevelsToTrim = numberOfLevelsToTrim;
 	}
 
 	/**
-	 * Method getSkipSourceLevels.
+	 * Method getTrimSourceLevels.
 	 * @return int
 	 */
-	public int getSkipSourceLevels() {
-		return this.numberOfSourceLevelsToSkip;
+	public int getTrimSourceLevels() {
+		return this.numberOfSourceLevelsToTrim;
 	}
 
 	/**
-	 * Method setSkipSourceLevels.
-	 * @param numberOfLevelsToSkip int
+	 * Method setTrimSourceLevels.
+	 * @param numberOfLevelsToTrim int
 	 */
-	public void setSkipSourceLevels(int numberOfLevelsToSkip) {
-		this.numberOfSourceLevelsToSkip = numberOfLevelsToSkip;
+	public void setTrimSourceLevels(int numberOfLevelsToTrim) {
+		this.numberOfSourceLevelsToTrim = numberOfLevelsToTrim;
 	}
 
 	/**
-	 * Method getSkipTargetLevels.
+	 * Method getTrimTargetLevels.
 	 * @return int
 	 */
-	public int getSkipTargetLevels() {
-		return this.numberOfTargetLevelsToSkip;
+	public int getTrimTargetLevels() {
+		return this.numberOfTargetLevelsToTrim;
 	}
 
 	/**
-	 * Method setSkipTargetLevels.
-	 * @param numberOfLevelsToSkip int
+	 * Method setTrimTargetLevels.
+	 * @param numberOfLevelsToTrim int
 	 */
-	public void setSkipTargetLevels(int numberOfLevelsToSkip) {
-		this.numberOfTargetLevelsToSkip = numberOfLevelsToSkip;
+	public void setTrimTargetLevels(int numberOfLevelsToTrim) {
+		this.numberOfTargetLevelsToTrim = numberOfLevelsToTrim;
 	}
 
 	/**
@@ -298,7 +298,7 @@ public class ZipDiffTask extends Task {
 	protected void writeOutput(Differences d) throws IOException {
 		String output = getOutput();
 		Builder builder = BuilderFactory.create(output);
-		builder.build(output, getSkipOutputLevels(), d);
+		builder.build(output, getTrimOutputLevels(), d);
 	}
 
 	/**
@@ -311,8 +311,8 @@ public class ZipDiffTask extends Task {
 
 		try {
 			DifferenceCalculator calculator = new DifferenceCalculator(this.source, this.target);
-			calculator.setNumberOfSourceLevelsToSkip(getSkipSourceLevels());
-			calculator.setNumberOfTargetLevelsToSkip(getSkipTargetLevels());
+			calculator.setNumberOfSourceLevelsToTrim(getTrimSourceLevels());
+			calculator.setNumberOfTargetLevelsToTrim(getTrimTargetLevels());
 			calculator.setCompareCRCValues(getCompareCRCValues());
 			calculator.setCompareTimestamps(getCompareTimestamps());
 			calculator.setExcludeCVSFiles(getExcludeCVSFiles());

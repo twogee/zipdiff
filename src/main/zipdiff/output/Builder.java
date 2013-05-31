@@ -18,9 +18,9 @@ public interface Builder {
 	/**
 	 * builds the output
 	 * @param filename name of output file
-	 * @param numberOfOutputLevelsToSkip number of directory levels to skip
+	 * @param numberOfOutputLevelsToTrim number of directory levels to trim
 	 * @param d differences
 	 * @throws IOException in case of an input/output error
 	 */
-	public void build(String filename, int numberOfOutputLevelsToSkip, Differences d) throws IOException;
+	public void build(String filename, int numberOfOutputLevelsToTrim, Differences d) throws IOException;
 }

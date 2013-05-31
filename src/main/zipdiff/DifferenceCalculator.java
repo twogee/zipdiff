@@ -48,14 +48,14 @@ public class DifferenceCalculator {
 	private final ZipFile target;
 
 	/**
-	 * Field numberOfSourceLevelsToSkip.
+	 * Field numberOfSourceLevelsToTrim.
 	 */
-	private int numberOfSourceLevelsToSkip = 0;
+	private int numberOfSourceLevelsToTrim = 0;
 
 	/**
-	 * Field numberOfTargetLevelsToSkip.
+	 * Field numberOfTargetLevelsToTrim.
 	 */
-	private int numberOfTargetLevelsToSkip = 0;
+	private int numberOfTargetLevelsToTrim = 0;
 
 	/**
 	 * Field compareTimestamps.
@@ -224,35 +224,35 @@ public class DifferenceCalculator {
 	}
 
 	/**
-	 * Sets the number of directory levels to skip in the source file
-	 * @param numberOfLevelsToSkip number of directory levels to skip
+	 * Sets the number of directory levels to trim in the source file
+	 * @param numberOfLevelsToTrim number of directory levels to trim
 	 */
-	public void setNumberOfSourceLevelsToSkip(int numberOfLevelsToSkip) {
-		this.numberOfSourceLevelsToSkip = numberOfLevelsToSkip;
+	public void setNumberOfSourceLevelsToTrim(int numberOfLevelsToTrim) {
+		this.numberOfSourceLevelsToTrim = numberOfLevelsToTrim;
 	}
 
 	/**
-	 * Gets the number of directory levels to skip in the source file
-	 * @return number of directory levels to skip
+	 * Gets the number of directory levels to trim in the source file
+	 * @return number of directory levels to trim
 	 */
-	public int getNumberOfSourceLevelsToSkip() {
-		return numberOfSourceLevelsToSkip;
+	public int getNumberOfSourceLevelsToTrim() {
+		return numberOfSourceLevelsToTrim;
 	}
 
 	/**
-	 * Sets the number of directory levels to skip in the target file
-	 * @param numberOfLevelsToSkip number of directory levels to skip
+	 * Sets the number of directory levels to trim in the target file
+	 * @param numberOfLevelsToTrim number of directory levels to trim
 	 */
-	public void setNumberOfTargetLevelsToSkip(int numberOfLevelsToSkip) {
-		this.numberOfTargetLevelsToSkip = numberOfLevelsToSkip;
+	public void setNumberOfTargetLevelsToTrim(int numberOfLevelsToTrim) {
+		this.numberOfTargetLevelsToTrim = numberOfLevelsToTrim;
 	}
 
 	/**
-	 * Gets the number of directory levels to skip in the target file
-	 * @return number of directory levels to skip
+	 * Gets the number of directory levels to trim in the target file
+	 * @return number of directory levels to trim
 	 */
-	public int getNumberOfTargetLevelsToSkip() {
-		return numberOfTargetLevelsToSkip;
+	public int getNumberOfTargetLevelsToTrim() {
+		return numberOfTargetLevelsToTrim;
 	}
 
 	/**
@@ -270,7 +270,7 @@ public class DifferenceCalculator {
 	 * Opens the ZipFile and builds up a map of all the entries. The key is the name of
 	 * the entry and the value is the ZipEntry itself.
 	 * @param zf The ZipFile for which to build up the map of ZipEntries
-	 * @param nl Number of directory levels to skip
+	 * @param nl Number of directory levels to trim
 	 * @return The map containing all the ZipEntries. The key being the name of the ZipEntry.
 	 * @throws IOException
 	 */
@@ -327,7 +327,7 @@ public class DifferenceCalculator {
 	 * @param is The InputStream of the corresponding ZipEntry.
 	 * @param zipEntryMap The Map in which to place all the ZipEntries into. The key will
 	 * be the name of the ZipEntry.
-	 * @param nl Number of directory levels to skip
+	 * @param nl Number of directory levels to trim
 	 * @throws IOException
 	 */
 	protected void processZipEntry(String prefix, ZipEntry zipEntry, InputStream is, Map<String, ZipEntry> zipEntryMap, int nl) throws IOException {
@@ -408,8 +408,8 @@ public class DifferenceCalculator {
 	 * and then compares them.
 	 * @param sourcezip The source ZipFile to compare
 	 * @param targetzip The target ZipFile to compare
-	 * @param nsourcel number of directory levels to skip in the source file
-	 * @param ntargetl number of directory levels to skip in the target file	
+	 * @param nsourcel number of directory levels to trim in the source file
+	 * @param ntargetl number of directory levels to trim in the target file	
 	 * @return All the differences between the two files.
 	 * @throws IOException
 	 */
@@ -520,7 +520,7 @@ public class DifferenceCalculator {
 	 * @throws IOException
 	 */
 	public Differences getDifferences() throws IOException {
-		Differences diff = calculateDifferences(source, target, numberOfSourceLevelsToSkip, numberOfTargetLevelsToSkip);
+		Differences diff = calculateDifferences(source, target, numberOfSourceLevelsToTrim, numberOfTargetLevelsToTrim);
 		diff.setSource(source.getName());
 		diff.setTarget(target.getName());
 

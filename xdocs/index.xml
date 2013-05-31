@@ -56,11 +56,11 @@
       <dd>compary zip entry timestamps, default false</dd>
       <dt><source>comparecrcvalues</source></dt>
       <dd>compare zip entry CRCs, default false</dd>
-      <dt><source>skipsourcelevels</source></dt>
+      <dt><source>trimsourcelevels</source></dt>
       <dd>remove directory prefixes corresponding to <em>n</em> levels from source zip entry names before comparison, default 0</dd>
-      <dt><source>skiptargetlevels</source></dt>
+      <dt><source>trimtargetlevels</source></dt>
       <dd>remove directory prefixes corresponding to <em>n</em> levels from target zip entry names before comparison, default 0</dd>
-       <dt><source>skipoutputlevels</source></dt>
+       <dt><source>trimoutputlevels</source></dt>
       <dd>remove directory prefixes corresponding to <em>n</em> levels from output zip entry names (only supported for zip output), default 0</dd>
       <dt><source>excluderegex</source></dt>
       <dd>exclude zip entry names matching a regexp from comparison, default none</dd>

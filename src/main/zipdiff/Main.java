@@ -77,22 +77,22 @@ public class Main {
 	private static final String OPTION_TARGET_FILE = "target";
 
 	/**
-	 * Field OPTION_SKIP_OUTPUT_LEVELS.
-	 * (value is ""skipoutputlevels"")
+	 * Field OPTION_TRIM_OUTPUT_LEVELS.
+	 * (value is ""trimoutputlevels"")
 	 */
-	private static final String OPTION_SKIP_OUTPUT_LEVELS = "skipoutputlevels";
+	private static final String OPTION_TRIM_OUTPUT_LEVELS = "trimoutputlevels";
 
 	/**
-	 * Field OPTION_SKIP_SOURCE_LEVELS.
-	 * (value is ""skipsourcelevels"")
+	 * Field OPTION_TRIM_SOURCE_LEVELS.
+	 * (value is ""trimsourcelevels"")
 	 */
-	private static final String OPTION_SKIP_SOURCE_LEVELS = "skipsourcelevels";
+	private static final String OPTION_TRIM_SOURCE_LEVELS = "trimsourcelevels";
 
 	/**
-	 * Field OPTION_SKIP_TARGET_LEVELS.
-	 * (value is ""skiptargetlevels"")
+	 * Field OPTION_TRIM_TARGET_LEVELS.
+	 * (value is ""trimtargetlevels"")
 	 */
-	private static final String OPTION_SKIP_TARGET_LEVELS = "skiptargetlevels";
+	private static final String OPTION_TRIM_TARGET_LEVELS = "trimtargetlevels";
 
 	/**
 	 * Field OPTION_EXCLUDE_REGEX.
@@ -137,20 +137,20 @@ public class Main {
 			new Option(OPTION_TARGET_FILE, OPTION_TARGET_FILE, true, "target file to compare");
 		target.setRequired(true);
 
-		Option numberOfLevelsToSkipInOutput =
-			new Option(OPTION_SKIP_OUTPUT_LEVELS, OPTION_SKIP_OUTPUT_LEVELS, true,
-					   "number of directory levels to skip in the output file (if supported by output processor");
-		numberOfLevelsToSkipInOutput.setRequired(false);
+		Option numberOfLevelsToTrimInOutput =
+			new Option(OPTION_TRIM_OUTPUT_LEVELS, OPTION_TRIM_OUTPUT_LEVELS, true,
+					   "number of directory levels to trim in the output file (if supported by output processor");
+		numberOfLevelsToTrimInOutput.setRequired(false);
 
-		Option numberOfLevelsToSkipInSource =
-			new Option(OPTION_SKIP_SOURCE_LEVELS, OPTION_SKIP_SOURCE_LEVELS, true,
-					   "number of directory levels to skip in the source file");
-		numberOfLevelsToSkipInSource.setRequired(false);
+		Option numberOfLevelsToTrimInSource =
+			new Option(OPTION_TRIM_SOURCE_LEVELS, OPTION_TRIM_SOURCE_LEVELS, true,
+					   "number of directory levels to trim in the source file");
+		numberOfLevelsToTrimInSource.setRequired(false);
 
-		Option numberOfLevelsToSkipInTarget =
-			new Option(OPTION_SKIP_TARGET_LEVELS, OPTION_SKIP_TARGET_LEVELS, true,
-					   "number of directory levels to skip in the target file");
-		numberOfLevelsToSkipInTarget.setRequired(false);
+		Option numberOfLevelsToTrimInTarget =
+			new Option(OPTION_TRIM_TARGET_LEVELS, OPTION_TRIM_TARGET_LEVELS, true,
+					   "number of directory levels to trim in the target file");
+		numberOfLevelsToTrimInTarget.setRequired(false);
 
 		Option outputFileOption =
 			new Option(OPTION_OUTPUT_FILE, OPTION_OUTPUT_FILE, true, "output filename");
@@ -176,9 +176,9 @@ public class Main {
 		OPTIONS.addOption(compareCRC);
 		OPTIONS.addOption(source);
 		OPTIONS.addOption(target);
-		OPTIONS.addOption(numberOfLevelsToSkipInOutput);
-		OPTIONS.addOption(numberOfLevelsToSkipInSource);
-		OPTIONS.addOption(numberOfLevelsToSkipInTarget);
+		OPTIONS.addOption(numberOfLevelsToTrimInOutput);
+		OPTIONS.addOption(numberOfLevelsToTrimInSource);
+		OPTIONS.addOption(numberOfLevelsToTrimInTarget);
 		OPTIONS.addOption(regex);
 		OPTIONS.addOption(excludeCVSFilesOption);
 		OPTIONS.addOption(exitWithError);
@@ -212,13 +212,13 @@ public class Main {
 	/**
 	 * Method writeOutputFile.
 	 * @param filename String
-	 * @param numberOfOutputLevelsToSkip int
+	 * @param numberOfOutputLevelsToTrim int
 	 * @param d Differences
 	 * @throws IOException
 	 */
-	private static void writeOutputFile(String filename, int numberOfOutputLevelsToSkip, Differences d) throws IOException {
+	private static void writeOutputFile(String filename, int numberOfOutputLevelsToTrim, Differences d) throws IOException {
 		Builder builder = BuilderFactory.create(filename);
-		builder.build(filename, numberOfOutputLevelsToSkip, d);
+		builder.build(filename, numberOfOutputLevelsToTrim, d);
 	}
 
 	/**
@@ -245,21 +245,21 @@ public class Main {
 
 			DifferenceCalculator calc = new DifferenceCalculator(source, target);
 
-			int numberOfLevelsToSkipInSource = 0;
-			if (line.getOptionValue(OPTION_SKIP_SOURCE_LEVELS) != null) {
-				numberOfLevelsToSkipInSource = Integer.parseInt(line.getOptionValue(OPTION_SKIP_SOURCE_LEVELS));
+			int numberOfLevelsToTrimInSource = 0;
+			if (line.getOptionValue(OPTION_TRIM_SOURCE_LEVELS) != null) {
+				numberOfLevelsToTrimInSource = Integer.parseInt(line.getOptionValue(OPTION_TRIM_SOURCE_LEVELS));
 			}
-			int numberOfLevelsToSkipInTarget = 0;
-			if (line.getOptionValue(OPTION_SKIP_TARGET_LEVELS) != null) {
-				numberOfLevelsToSkipInTarget = Integer.parseInt(line.getOptionValue(OPTION_SKIP_TARGET_LEVELS));
+			int numberOfLevelsToTrimInTarget = 0;
+			if (line.getOptionValue(OPTION_TRIM_TARGET_LEVELS) != null) {
+				numberOfLevelsToTrimInTarget = Integer.parseInt(line.getOptionValue(OPTION_TRIM_TARGET_LEVELS));
 			}
-			int numberOfLevelsToSkipInOutput = 0;
-			if (line.getOptionValue(OPTION_SKIP_OUTPUT_LEVELS) != null) {
-				numberOfLevelsToSkipInOutput = Integer.parseInt(line.getOptionValue(OPTION_SKIP_OUTPUT_LEVELS));
+			int numberOfLevelsToTrimInOutput = 0;
+			if (line.getOptionValue(OPTION_TRIM_OUTPUT_LEVELS) != null) {
+				numberOfLevelsToTrimInOutput = Integer.parseInt(line.getOptionValue(OPTION_TRIM_OUTPUT_LEVELS));
 			}
 
-			calc.setNumberOfSourceLevelsToSkip(numberOfLevelsToSkipInSource);
-			calc.setNumberOfTargetLevelsToSkip(numberOfLevelsToSkipInTarget);
+			calc.setNumberOfSourceLevelsToTrim(numberOfLevelsToTrimInSource);
+			calc.setNumberOfTargetLevelsToTrim(numberOfLevelsToTrimInTarget);
 
 			if (line.hasOption(OPTION_COMPARE_CRC_VALUES)) {
 				calc.setCompareCRCValues(true);
@@ -296,7 +296,7 @@ public class Main {
 
 			if (line.hasOption(OPTION_OUTPUT_FILE)) {
 				String outputfile = line.getOptionValue(OPTION_OUTPUT_FILE);
-				writeOutputFile(outputfile, numberOfLevelsToSkipInOutput, diff);
+				writeOutputFile(outputfile, numberOfLevelsToTrimInOutput, diff);
 			}
 
 			if (diff.hasDifferences()) {

@@ -11,16 +11,16 @@ java -jar zipdiff.jar --source foo.zip --target bar.zip [options]
 
 Valid options are:
 
-* --comparecrcvalues     compares the CRC values in addition to file size
-* --comparetimestamps    compares timestamps in addition to file size
-* --excluderegex *\<regex>* excludes file name matching regex from comparison
-* --excludecvsfiles      excludes CVS folders from comparison
+* --comparecrcvalues        compares the CRC values in addition to file size
+* --comparetimestamps       compares timestamps in addition to file size
+* --excluderegex *\<regex>* excludes file names matching regex from comparison
+* --excludecvsfiles         excludes CVS folders from comparison
 * --output *\<name>*        name of the output file
-* --skipoutputlevels *\<n>* number of path segment to skip in the output file
-* --skipsourcelevels *\<n>* number of path segment to skip in the source file
-* --skiptargetlevels *\<n>* number of path segment to skip in the target file
-* --errorondifference    use "error" return code (2) if differences have been detected rather than 1
-* --verbose              print detailed messages
+* --trimoutputlevels *\<n>* number of path segments to trim in the output file
+* --trimsourcelevels *\<n>* number of path segments to trim in the source file
+* --trimtargetlevels *\<n>* number of path segments to trim in the target file
+* --errorondifference       use "error" return code (2) if differences have been detected rather than 1
+* --verbose                 print detailed messages
 
 
 

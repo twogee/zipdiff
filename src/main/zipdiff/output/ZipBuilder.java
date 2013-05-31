@@ -83,7 +83,7 @@ public class ZipBuilder extends AbstractBuilder {
 		for (String filename : this.filenames) {
 			ZipEntry zipEntry = zipFile.getEntry(filename);
 			InputStream is = zipFile.getInputStream(zipEntry);
-			ZipEntry z = new ZipEntry(StringUtil.removeDirectoryPrefix(filename, getSkipOutputLevels()));
+			ZipEntry z = new ZipEntry(StringUtil.removeDirectoryPrefix(filename, getTrimOutputLevels()));
 			os.putNextEntry(z);
 			copyStream(is, os);
 			os.closeEntry();

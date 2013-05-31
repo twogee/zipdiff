@@ -19,20 +19,20 @@ import zipdiff.Differences;
  */
 public abstract class AbstractBuilder implements Builder {
 	/**
-	 * number of directory levels to skip in the output file
+	 * number of directory levels to trim in the output file
 	 */
-	private int numberOfOutputLevelsToSkip;
+	private int numberOfOutputLevelsToTrim;
 
 	/**
 	 * builds the output
 	 * @param filename name of output file
-	 * @param numberOfLevelsToSkip number of directory levels to skip
+	 * @param numberOfLevelsToTrim number of directory levels to trim
 	 * @param d differences
 	 * @throws IOException in case of an input/output error
 	 * @see zipdiff.output.Builder#build(String, int, Differences)
 	 */
-	public void build(String filename, int numberOfLevelsToSkip, Differences d) throws IOException {
-		this.numberOfOutputLevelsToSkip = numberOfLevelsToSkip;
+	public void build(String filename, int numberOfLevelsToTrim, Differences d) throws IOException {
+		this.numberOfOutputLevelsToTrim = numberOfLevelsToTrim;
 
 		OutputStream os = null;
 		if ((filename == null) || filename.equals("-")) {
@@ -54,11 +54,11 @@ public abstract class AbstractBuilder implements Builder {
 	}
 
 	/**
-	 * Method getSkipOutputLevels.
+	 * Method getTrimOutputLevels.
 	 * @return int
 	 */
-	public int getSkipOutputLevels() {
-		return this.numberOfOutputLevelsToSkip;
+	public int getTrimOutputLevels() {
+		return this.numberOfOutputLevelsToTrim;
 	}
 
 	/**
