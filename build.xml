@@ -54,8 +54,6 @@
         <fileset dir="${lib.dir}/core" includes="*.jar"/>
     </path>
 
-    <taskdef resource="net/sf/antcontrib/antlib.xml" classpath="${lib.dir}/doxia/ant-contrib.jar" onerror="ignore"/>
-
     <path id="doxia.class.path">
         <fileset dir="${lib.dir}/doxia" includes="*.jar"/>
     </path>
@@ -95,6 +93,7 @@
     </target>
 
     <target name="xdocs" depends="resolve">
+        <taskdef resource="net/sf/antcontrib/antlib.xml" classpath="${lib.dir}/doxia/ant-contrib.jar" onerror="ignore"/>
         <for param="xdoc.source">
             <path>
                 <fileset dir="${xdocs.dir}" includes="*.xml" excludes="navigation.xml"/>
