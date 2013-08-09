@@ -5,4 +5,5 @@ build
 bin
 junit-reports
 lib
+.DS_Store
 *~
