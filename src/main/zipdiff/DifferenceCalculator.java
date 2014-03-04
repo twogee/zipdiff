@@ -196,16 +196,8 @@ public class DifferenceCalculator {
 	 * @return boolean
 	 */
 	protected boolean isCVSFile(String filepath, String entryName) {
-		if (entryName == null) {
-			return false;
-		}
-
-		if ((filepath.indexOf("CVS/") != -1) || (entryName.indexOf("CVS/") != -1)) {
-			return true;
-		}
-
-		return false;
-	}
+        return entryName != null && (filepath.contains("CVS/") || entryName.contains("CVS/"));
+    }
 
 	/**
 	 * Ensure that the comparison checks against the CRCs of the entries.
@@ -378,15 +370,11 @@ public class DifferenceCalculator {
 		}
 
 		String lowercaseName = filename.toLowerCase();
-		if (lowercaseName.endsWith(".zip")
-			|| lowercaseName.endsWith(".ear")
-			|| lowercaseName.endsWith(".war")
-			|| lowercaseName.endsWith(".rar")
-			|| lowercaseName.endsWith(".jar")) {
-			return true;
-		}
-
-		return false;
+		return lowercaseName.endsWith(".zip")
+		    || lowercaseName.endsWith(".ear")
+		    || lowercaseName.endsWith(".war")
+		    || lowercaseName.endsWith(".rar")
+		    || lowercaseName.endsWith(".jar");
 	}
 
 	/**

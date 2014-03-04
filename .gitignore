@@ -6,4 +6,6 @@ bin
 junit-reports
 lib
 .DS_Store
+.idea
 *~
+*.iml

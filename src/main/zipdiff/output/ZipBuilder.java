@@ -52,7 +52,7 @@ public class ZipBuilder extends AbstractBuilder {
 	 */
 	private void collectAddedFiles(Differences diff) {
 		for (Map.Entry<String, ZipEntry[]> mapEntry : diff.getAdded().entrySet()) {
-			if (mapEntry.getKey().indexOf("!") < 0) {
+			if (!mapEntry.getKey().contains("!")) {
 				this.filenames.add((mapEntry.getValue())[0].getName());
 			}
 		}
@@ -64,7 +64,7 @@ public class ZipBuilder extends AbstractBuilder {
 	 */
 	private void collectModifiedFiles(Differences diff) {
 		for (Map.Entry<String, ZipEntry[]> mapEntry : diff.getChanged().entrySet()) {
-			if (mapEntry.getKey().indexOf("!") < 0) {
+			if (!mapEntry.getKey().contains("!")) {
 				this.filenames.add((mapEntry.getValue())[1].getName());
 			}
 		}

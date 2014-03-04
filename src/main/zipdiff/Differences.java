@@ -171,41 +171,41 @@ public class Differences {
 		if (getAdded().size() == 1) {
 			sb.append("1 file was");
 		} else {
-			sb.append(getAdded().size() + " files were");
+			sb.append(getAdded().size()).append(" files were");
 		}
-		sb.append(" added to " + getTarget() + "\n");
+		sb.append(" added to ").append(getTarget()).append("\n");
 
 		for (String name: getAdded().keySet()) {
-			sb.append("\t[added] " + name + "\n");
+			sb.append("\t[added] ").append(name).append("\n");
 		}
 
 		if (getRemoved().size() == 1) {
 			sb.append("1 file was");
 		} else {
-			sb.append(getRemoved().size() + " files were");
+			sb.append(getRemoved().size()).append(" files were");
 		}
-		sb.append(" removed from " + getTarget() + "\n");
+		sb.append(" removed from ").append(getTarget()).append("\n");
 
 		for (String name: getRemoved().keySet()) {
-			sb.append("\t[removed] " + name + "\n");
+			sb.append("\t[removed] ").append(name).append("\n");
 		}
 
 		if (getChanged().size() == 1) {
 			sb.append("1 file changed\n");
 		} else {
-			sb.append(getChanged().size() + " files changed\n");
+			sb.append(getChanged().size()).append(" files changed\n");
 		}
 
 		for (String name: getChanged().keySet()) {
 			ZipEntry[] entries = getChanged().get(name);
-			sb.append("\t[changed] " + name + " ");
-			sb.append(" ( size " + entries[0].getSize());
-			sb.append(" : " + entries[1].getSize());
+			sb.append("\t[changed] ").append(name).append(" ");
+			sb.append(" ( size ").append(entries[0].getSize());
+			sb.append(" : ").append(entries[1].getSize());
 			sb.append(" )\n");
 		}
 		int differenceCount = getAdded().size() + getChanged().size() + getRemoved().size();
 
-		sb.append("Total differences: " + differenceCount);
+		sb.append("Total differences: ").append(differenceCount);
 		return sb.toString();
 	}
 }
