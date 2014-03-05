@@ -141,7 +141,7 @@ public class DifferenceCalculator {
 	/**
 	 * Parses Regex that excludes matching ZipEntry
 	 * @param patterns A Set of regular expressions that exclude a ZipEntry from comparison if matched.
-	 * @see java.util.regex
+	 * @see java.util.regex.Pattern
 	 */
 	public void setExcludeRegex(Set<String> patterns) {
 		if (patterns == null) {
