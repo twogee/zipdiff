@@ -14,7 +14,7 @@ Valid options are:
 * --comparecrcvalues        compares the CRC values in addition to file size
 * --comparetimestamps       compares timestamps in addition to file size
 * --excluderegex *\<regex>* excludes file names matching regex from comparison
-* --excludecvsfiles         excludes CVS folders from comparison
+* --excludescmfiles         excludes SCM folders from comparison (SCCM, RCS, CVS, .svn, .bzr, .hg, .git)
 * --output *\<name>*        name of the output file
 * --trimoutputlevels *\<n>* number of path segments to trim in the output file
 * --trimsourcelevels *\<n>* number of path segments to trim in the source file
