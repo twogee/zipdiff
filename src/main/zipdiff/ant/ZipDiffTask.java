@@ -62,9 +62,9 @@ public class ZipDiffTask extends Task {
 	private boolean compareTimestamps = false;
 
 	/**
-	 * Field excludeCVSFiles.
+	 * Field excludeSCMFiles.
 	 */
-	private boolean excludeCVSFiles = false;
+	private boolean excludeSCMFiles = false;
 
 	/**
 	 * Field compareCRCValues.
@@ -188,19 +188,19 @@ public class ZipDiffTask extends Task {
 	}
 
 	/**
-	 * Method getExcludeCVSFiles.
+	 * Method getExcludeSCMFiles.
 	 * @return boolean
 	 */
-	public boolean getExcludeCVSFiles() {
-		return this.excludeCVSFiles;
+	public boolean getExcludeSCMFiles() {
+		return this.excludeSCMFiles;
 	}
 
 	/**
-	 * Method setExcludeCVSFiles.
+	 * Method setExcludeSCMFiles.
 	 * @param b boolean
 	 */
-	public void setExcludeCVSFiles(boolean b) {
-		this.excludeCVSFiles = b;
+	public void setExcludeSCMFiles(boolean b) {
+		this.excludeSCMFiles = b;
 	}
 
 	/**
@@ -315,7 +315,7 @@ public class ZipDiffTask extends Task {
 			calculator.setNumberOfTargetLevelsToTrim(getTrimTargetLevels());
 			calculator.setCompareCRCValues(getCompareCRCValues());
 			calculator.setCompareTimestamps(getCompareTimestamps());
-			calculator.setExcludeCVSFiles(getExcludeCVSFiles());
+			calculator.setExcludeSCMFiles(getExcludeSCMFiles());
 			calculator.setExcludeRegex(getExludeRegexp());
 
 			diff = calculator.getDifferences();

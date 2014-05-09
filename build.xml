@@ -125,7 +125,7 @@
             <manifest>
                 <section name="${name}">
                     <attribute name="Implementation-Title" value="${name}"/>
-                    <attribute name="Implementation-Version" value="${version}"/> 
+                    <attribute name="Implementation-Version" value="${version}"/>
                 </section>
             </manifest>
             <fileset dir="${classes.dir}"
@@ -140,7 +140,7 @@
             <manifest>
                 <section name="${name.ant}">
                     <attribute name="Implementation-Title" value="${name.ant}"/>
-                    <attribute name="Implementation-Version" value="${version}"/> 
+                    <attribute name="Implementation-Version" value="${version}"/>
                 </section>
             </manifest>
             <fileset dir="${classes.dir}">

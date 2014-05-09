@@ -53,10 +53,10 @@ public class Main {
 	private static final String OPTION_COMPARE_TIMESTAMPS = "comparetimestamps";
 
 	/**
-	 * Field OPTION_EXCLUDE_CVS_FILES.
-	 * (value is ""excludecvsfiles"")
+	 * Field OPTION_EXCLUDE_SCM_FILES.
+	 * (value is ""excludescmfiles"")
 	 */
-	private static final String OPTION_EXCLUDE_CVS_FILES = "excludecvsfiles";
+	private static final String OPTION_EXCLUDE_SCM_FILES = "excludescmfiles";
 
 	/**
 	 * Field OPTION_OUTPUT_FILE.
@@ -161,9 +161,9 @@ public class Main {
                        "regular expression to exclude matching files e.g. (?i)meta-inf.*");
 		regex.setRequired(false);
 
-		Option excludeCVSFilesOption =
-			new Option(OPTION_EXCLUDE_CVS_FILES, OPTION_EXCLUDE_CVS_FILES, false, "exclude CVS files");
-		excludeCVSFilesOption.setRequired(false);
+		Option excludeSCMFilesOption =
+			new Option(OPTION_EXCLUDE_SCM_FILES, OPTION_EXCLUDE_SCM_FILES, false, "exclude SCM files");
+		excludeSCMFilesOption.setRequired(false);
 
 		Option exitWithError =
 			new Option(OPTION_ERROR_ON_DIFF, OPTION_ERROR_ON_DIFF, false,
@@ -180,7 +180,7 @@ public class Main {
 		OPTIONS.addOption(numberOfLevelsToTrimInSource);
 		OPTIONS.addOption(numberOfLevelsToTrimInTarget);
 		OPTIONS.addOption(regex);
-		OPTIONS.addOption(excludeCVSFilesOption);
+		OPTIONS.addOption(excludeSCMFilesOption);
 		OPTIONS.addOption(exitWithError);
 		OPTIONS.addOption(verboseOption);
 		OPTIONS.addOption(outputFileOption);
@@ -267,10 +267,10 @@ public class Main {
 				calc.setCompareCRCValues(false);
 			}
 
-			if (line.hasOption(OPTION_EXCLUDE_CVS_FILES)) {
-				calc.setExcludeCVSFiles(true);
+			if (line.hasOption(OPTION_EXCLUDE_SCM_FILES)) {
+				calc.setExcludeSCMFiles(true);
 			} else {
-				calc.setExcludeCVSFiles(false);
+				calc.setExcludeSCMFiles(false);
 			}
 
 			if (line.hasOption(OPTION_COMPARE_TIMESTAMPS)) {

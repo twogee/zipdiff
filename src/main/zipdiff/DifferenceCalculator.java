@@ -63,9 +63,9 @@ public class DifferenceCalculator {
 	private boolean compareTimestamps = false;
 
 	/**
-	 * Field excludeCVSFiles.
+	 * Field excludeSCMFiles.
 	 */
-	private boolean excludeCVSFiles = false;
+	private boolean excludeSCMFiles = false;
 
 	/**
 	 * Field compareCRCValues.
@@ -81,32 +81,6 @@ public class DifferenceCalculator {
 	 * Field bVerbose.
 	 */
 	private boolean bVerbose = false;
-
-	/**
-	 * Method debug.
-	 * @param msg Object
-	 */
-	protected void debug(Object msg) {
-		if (isVerbose()) {
-			System.out.println("[" + DifferenceCalculator.class.getName() + "] " + String.valueOf(msg));
-		}
-	}
-
-	/**
-	 * Set the verboseness of the debug output.
-	 * @param b true to make verbose
-	 */
-	public void setVerbose(boolean b) {
-		bVerbose = b;
-	}
-
-	/**
-	 * Method isVerboseEnabled.
-	 * @return boolean
-	 */
-	protected boolean isVerbose() {
-		return bVerbose;
-	}
 
 	/**
 	 * Constructor taking 2 filenames to compare
@@ -137,6 +111,32 @@ public class DifferenceCalculator {
 		source = sourcezip;
 		target = targetzip;
 	}
+
+    /**
+     * Method debug.
+     * @param msg Object
+     */
+    protected void debug(Object msg) {
+        if (isVerbose()) {
+            System.out.println("[" + DifferenceCalculator.class.getName() + "] " + String.valueOf(msg));
+        }
+    }
+
+    /**
+     * Set the verboseness of the debug output.
+     * @param b true to make verbose
+     */
+    public void setVerbose(boolean b) {
+        bVerbose = b;
+    }
+
+    /**
+     * Method isVerboseEnabled.
+     * @return boolean
+     */
+    protected boolean isVerbose() {
+        return bVerbose;
+    }
 
 	/**
 	 * Parses Regex that excludes matching ZipEntry
@@ -173,7 +173,7 @@ public class DifferenceCalculator {
 			return false;
 		}
 
-		if (isCVSFile(filepath, entryName) && (excludeCVSFiles())) {
+		if (isSCMFile(filepath, entryName) && isExcludingSCMFiles()) {
 			return true;
 		}
 
@@ -190,13 +190,20 @@ public class DifferenceCalculator {
 	}
 
 	/**
-	 * Method isCVSFile.
+	 * Method isSCMFile.
 	 * @param filepath String
 	 * @param entryName String
 	 * @return boolean
 	 */
-	protected boolean isCVSFile(String filepath, String entryName) {
-        return entryName != null && (filepath.contains("CVS/") || entryName.contains("CVS/"));
+	protected boolean isSCMFile(String filepath, String entryName) {
+        return entryName != null
+                && (filepath.contains("CVS/") || entryName.contains("CVS/")
+                || filepath.contains("RCS/") || entryName.contains("RCS/")
+                || filepath.contains("SCCS/") || entryName.contains("SCCS/")
+                || filepath.contains(".svn/") || entryName.contains(".svn/")
+                || filepath.contains(".bzr/") || entryName.contains(".bzr/")
+                || filepath.contains(".hg/") || entryName.contains(".hg/")
+                || filepath.contains(".git/") || entryName.contains(".git/"));
     }
 
 	/**
@@ -214,6 +221,38 @@ public class DifferenceCalculator {
 	public boolean isComparingCRCValues() {
 		return compareCRCValues;
 	}
+
+    /**
+     * Method setCompareTimestamps.
+     * @param b boolean
+     */
+    public void setCompareTimestamps(boolean b) {
+        compareTimestamps = b;
+    }
+
+    /**
+     * Method isComparingTimestamps.
+     * @return boolean
+     */
+    public boolean isComparingTimestamps() {
+        return compareTimestamps;
+    }
+
+    /**
+     * Method isExcludingSCMFiles.
+     * @return boolean
+     */
+    public boolean isExcludingSCMFiles() {
+        return excludeSCMFiles;
+    }
+
+    /**
+     * Method setExcludeSCMFiles.
+     * @param b boolean
+     */
+    public void setExcludeSCMFiles(boolean b) {
+        excludeSCMFiles = b;
+    }
 
 	/**
 	 * Sets the number of directory levels to trim in the source file
@@ -468,38 +507,6 @@ public class DifferenceCalculator {
 		}
 
 		return result;
-	}
-
-	/**
-	 * Method setCompareTimestamps.
-	 * @param b boolean
-	 */
-	public void setCompareTimestamps(boolean b) {
-		compareTimestamps = b;
-	}
-
-	/**
-	 * Method isComparingTimestamps.
-	 * @return boolean
-	 */
-	public boolean isComparingTimestamps() {
-		return compareTimestamps;
-	}
-
-	/**
-	 * Method excludeCVSFiles.
-	 * @return boolean
-	 */
-	public boolean excludeCVSFiles() {
-		return excludeCVSFiles;
-	}
-
-	/**
-	 * Method setExcludeCVSFiles.
-	 * @param b boolean
-	 */
-	public void setExcludeCVSFiles(boolean b) {
-		excludeCVSFiles = b;
 	}
 
 	/**

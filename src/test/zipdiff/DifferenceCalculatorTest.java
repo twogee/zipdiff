@@ -107,7 +107,7 @@ public class DifferenceCalculatorTest {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void createJarOneEntryA1() throws FileNotFoundException, IOException {
+	public void createJarOneEntryA1() throws IOException {
 		//	create a jar file with no duplicates
 		File testDir = new File(testDirPathName);
 		testDir.mkdirs();
@@ -134,7 +134,7 @@ public class DifferenceCalculatorTest {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void createJarOneEntryA2() throws FileNotFoundException, IOException {
+	public void createJarOneEntryA2() throws IOException {
 		//	create a jar file with no duplicates
 		File testDir = new File(testDirPathName);
 		testDir.mkdirs();
@@ -161,7 +161,7 @@ public class DifferenceCalculatorTest {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void createJarOneEntryAContentsChanged() throws FileNotFoundException, IOException {
+	public void createJarOneEntryAContentsChanged() throws IOException {
 		//	create a jar file with no duplicates
 		File testDir = new File(testDirPathName);
 		testDir.mkdirs();
@@ -194,7 +194,7 @@ public class DifferenceCalculatorTest {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void createJarOneEntryB1() throws FileNotFoundException, IOException {
+	public void createJarOneEntryB1() throws IOException {
 		//	create a jar file with no duplicates
 		File testDir = new File(testDirPathName);
 		testDir.mkdirs();
@@ -223,7 +223,7 @@ public class DifferenceCalculatorTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void testCalculateDifferencesSameZip() throws FileNotFoundException, IOException {
+	public void testCalculateDifferencesSameZip() throws IOException {
 		createJarOneEntryA1();
 		DifferenceCalculator calc = new DifferenceCalculator(testJarOneEntryA1Filename, testJarOneEntryA1Filename);
 		Differences differences = calc.getDifferences();
@@ -244,7 +244,7 @@ public class DifferenceCalculatorTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void testCalculateDifferencesZipsSameEntries() throws FileNotFoundException, IOException {
+	public void testCalculateDifferencesZipsSameEntries() throws IOException {
 		createJarOneEntryA1();
 		createJarOneEntryA2();
 		DifferenceCalculator calc = new DifferenceCalculator(testJarOneEntryA1Filename, testJarOneEntryA2Filename);
@@ -268,7 +268,7 @@ public class DifferenceCalculatorTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void testCalculateDifferencesZipsDifferentEntries() throws FileNotFoundException, IOException {
+	public void testCalculateDifferencesZipsDifferentEntries() throws IOException {
 		createJarOneEntryA1();
 		createJarOneEntryB1();
 		DifferenceCalculator calc = new DifferenceCalculator(testJarOneEntryA1Filename, testJarOneEntryB1Filename);
@@ -292,11 +292,11 @@ public class DifferenceCalculatorTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void testCalculateDifferencesZipsSameEntriesDifferentContent() throws FileNotFoundException, IOException {
+	public void testCalculateDifferencesZipsSameEntriesDifferentContent() throws IOException {
 		createJarOneEntryA1();
 		createJarOneEntryAContentsChanged();
 		DifferenceCalculator calc = new DifferenceCalculator(testJarOneEntryA1Filename, testJarOneEntryAContentsChangedFilename);
-		calc.setExcludeCVSFiles(true);
+		calc.setExcludeSCMFiles(true);
 		Differences differences = calc.getDifferences();
 		assertTrue(differences.hasDifferences());
 		Map<String, ZipEntry[]> addedEntries = differences.getAdded();
