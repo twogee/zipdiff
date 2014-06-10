@@ -129,7 +129,7 @@
                 </section>
             </manifest>
             <fileset dir="${classes.dir}"
-                     includes="zipdiff/**/*.class"/>
+                     includes="zipdiff/**/*.class" excludes="zipdiff/ant/*.class"/>
         </jar>
     </target>
 
@@ -147,6 +147,9 @@
                 <include name="zipdiff/**/*.class"/>
                 <exclude name="zipdiff/**/Main.class"/>
             </fileset>
+            <zipfileset dir="${metadata.dir}" prefix="zipdiff">
+                <include name="antlib.xml"/>
+            </zipfileset>
         </jar>
     </target>
 
@@ -203,7 +206,7 @@
     <target name="tests" depends="buildTest">
         <junit printsummary="yes" haltonfailure="yes">
             <classpath>
-                <pathelement refid="project.class.path"/>
+                <path refid="project.class.path"/>
                 <pathelement location="${classes.dir}"/>
                 <pathelement path="${java.class.path}"/>
             </classpath>

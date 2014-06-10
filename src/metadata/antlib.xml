@@ -1,0 +1,3 @@
+<antlib>
+	<taskdef name="zipdiff" classname="zipdiff.ant.ZipDiffTask"/>
+</antlib>
