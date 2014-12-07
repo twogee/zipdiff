@@ -77,8 +77,8 @@ public class ZipBuilder extends AbstractBuilder {
 	 * @throws IOException in case of an input/output error
 	 */
 	private void copyEntries(OutputStream out, String target) throws IOException {
-		ZipOutputStream os = new ZipOutputStream(out);
-		ZipFile zipFile = new ZipFile(target);
+		final ZipOutputStream os = new ZipOutputStream(out);
+		final ZipFile zipFile = new ZipFile(target);
 
 		for (String filename : this.filenames) {
 			ZipEntry zipEntry = zipFile.getEntry(filename);
@@ -101,7 +101,7 @@ public class ZipBuilder extends AbstractBuilder {
 	 * @throws IOException in case of an input/output error
 	 */
 	private void copyStream(InputStream input, OutputStream output) throws IOException {
-		byte buffer[] = new byte[4096];
+		final byte buffer[] = new byte[4096];
 		int count = input.read(buffer);
 		while (count > -1) {
 			output.write(buffer, 0, count);

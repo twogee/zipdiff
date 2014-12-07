@@ -166,7 +166,7 @@ public class Differences {
 	 * @return String
 	 */
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
+		final StringBuffer sb = new StringBuffer();
 
 		if (getAdded().size() == 1) {
 			sb.append("1 file was");
@@ -203,7 +203,7 @@ public class Differences {
 			sb.append(" : ").append(entries[1].getSize());
 			sb.append(" )\n");
 		}
-		int differenceCount = getAdded().size() + getChanged().size() + getRemoved().size();
+		final int differenceCount = getAdded().size() + getChanged().size() + getRemoved().size();
 
 		sb.append("Total differences: ").append(differenceCount);
 		return sb.toString();

@@ -38,7 +38,7 @@ public abstract class AbstractBuilder implements Builder {
 		if ((filename == null) || filename.equals("-")) {
 			os = System.out;
 		} else {
-			File file = new File(filename);
+			final File file = new File(filename);
 			if (file.isDirectory()) {
 				System.err.println("File \"" + filename + "\" is a directory, using stdout instead");
 				os = System.out;

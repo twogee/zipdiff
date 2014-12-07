@@ -25,7 +25,7 @@ public class HtmlBuilder extends AbstractBuilder {
 	 */
 	@Override
 	public void build(OutputStream out, Differences d) {
-		PrintWriter pw = new PrintWriter(out);
+		final PrintWriter pw = new PrintWriter(out);
 
 		pw.println("<html>");
 		pw.println("<meta http-equiv=\"Content-Type\" content=\"text/html\"/>");
@@ -120,7 +120,7 @@ public class HtmlBuilder extends AbstractBuilder {
 	 * @return content of style tag
 	 */
 	protected String getStyleTag() {
-		StringBuffer sb = new StringBuffer();
+		final StringBuffer sb = new StringBuffer();
 
 		sb.append("<style type=\"text/css\">\n");
 		sb.append(" body, p {");

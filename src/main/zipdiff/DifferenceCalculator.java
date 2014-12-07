@@ -181,8 +181,8 @@ public class DifferenceCalculator {
 			return false;
 		}
 
-		Matcher matcher = excludePattern.matcher(entryName);
-		boolean match = matcher.matches();
+		final Matcher matcher = excludePattern.matcher(entryName);
+		final boolean match = matcher.matches();
 		if (match) {
 			logger.log(Level.FINEST, "Found a match against : " + entryName + " so excluding");
 		}
@@ -306,9 +306,9 @@ public class DifferenceCalculator {
 	 * @throws IOException
 	 */
 	protected Map<String, ZipEntry> buildZipEntryMap(ZipFile zf, int nl) throws IOException {
-		Map<String, ZipEntry> zipEntryMap = new HashMap<String, ZipEntry>();
+		final Map<String, ZipEntry> zipEntryMap = new HashMap<String, ZipEntry>();
 		try {
-			Enumeration<? extends ZipEntry> entries = zf.entries();
+			final Enumeration<? extends ZipEntry> entries = zf.entries();
 			while (entries.hasMoreElements()) {
 				ZipEntry entry = entries.nextElement();
 				InputStream is = null;
@@ -365,7 +365,7 @@ public class DifferenceCalculator {
 		if (excludeThisFile(prefix, zipEntry.getName())) {
 			logger.log(Level.FINE, "ignoring file: " + zipEntry.getName());
 		} else {
-			String name = StringUtil.removeDirectoryPrefix(prefix + zipEntry.getName(), nl);
+			final String name = StringUtil.removeDirectoryPrefix(prefix + zipEntry.getName(), nl);
 			if ((name == null) || name.equals("")) {
 				return;
 			}
@@ -387,7 +387,7 @@ public class DifferenceCalculator {
 	 * @throws IOException
 	 */
 	protected void processEmbeddedZipFile(String prefix, InputStream is, Map<String, ZipEntry> m) throws IOException {
-		ZipInputStream zis = new ZipInputStream(is);
+		final ZipInputStream zis = new ZipInputStream(is);
 
 		ZipEntry entry = zis.getNextEntry();
 
@@ -408,7 +408,7 @@ public class DifferenceCalculator {
 			return false;
 		}
 
-		String lowercaseName = filename.toLowerCase();
+		final String lowercaseName = filename.toLowerCase();
 		return lowercaseName.endsWith(".zip")
 		    || lowercaseName.endsWith(".ear")
 		    || lowercaseName.endsWith(".war")
@@ -441,8 +441,8 @@ public class DifferenceCalculator {
 	 * @throws IOException
 	 */
 	protected Differences calculateDifferences(ZipFile sourcezip, ZipFile targetzip, int nsourcel, int ntargetl) throws IOException {
-		Map<String, ZipEntry> sourcemap = buildZipEntryMap(sourcezip, nsourcel);
-		Map<String, ZipEntry> targetmap = buildZipEntryMap(targetzip, ntargetl);
+		final Map<String, ZipEntry> sourcemap = buildZipEntryMap(sourcezip, nsourcel);
+		final Map<String, ZipEntry> targetmap = buildZipEntryMap(targetzip, ntargetl);
 
 		return calculateDifferences(sourcemap, targetmap);
 	}
@@ -455,12 +455,12 @@ public class DifferenceCalculator {
 	 * @return All the differences found between the two maps
 	 */
 	protected Differences calculateDifferences(Map<String, ZipEntry> sourcemap, Map<String, ZipEntry> targetmap) {
-		Differences diff = new Differences();
+		final Differences diff = new Differences();
 
-		Set<String> sourcenames = sourcemap.keySet();
-		Set<String> targetnames = targetmap.keySet();
+		final Set<String> sourcenames = sourcemap.keySet();
+		final Set<String> targetnames = targetmap.keySet();
 
-		Set<String> allNames = new HashSet<String>();
+		final Set<String> allNames = new HashSet<String>();
 		allNames.addAll(sourcenames);
 		allNames.addAll(targetnames);
 
@@ -515,7 +515,7 @@ public class DifferenceCalculator {
 	 * @throws IOException
 	 */
 	public Differences getDifferences() throws IOException {
-		Differences diff = calculateDifferences(source, target, numberOfSourceLevelsToTrim, numberOfTargetLevelsToTrim);
+		final Differences diff = calculateDifferences(source, target, numberOfSourceLevelsToTrim, numberOfTargetLevelsToTrim);
 		diff.setSource(source.getName());
 		diff.setTarget(target.getName());
 

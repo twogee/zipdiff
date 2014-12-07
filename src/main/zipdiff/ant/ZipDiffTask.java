@@ -74,7 +74,7 @@ public class ZipDiffTask extends Task {
 	/**
 	 * Field patterns.
 	 */
-	private Set<String> patterns = new HashSet<String>();
+	private final Set<String> patterns = new HashSet<String>();
 
 	/**
 	 * Field property.
@@ -278,7 +278,7 @@ public class ZipDiffTask extends Task {
 		// log("Target=" + target, Project.MSG_DEBUG);
 		// log("Output=" + getOutput(), Project.MSG_DEBUG);
 
-		Differences diff = calculateDifferences();
+		final Differences diff = calculateDifferences();
 		if (!"".equals(this.property) && null == getProject().getProperty(this.property) && diff.hasDifferences()) {
 			getProject().setNewProperty(this.property, "true");
 		}
@@ -296,8 +296,8 @@ public class ZipDiffTask extends Task {
 	 * @throws IOException
 	 */
 	protected void writeOutput(Differences d) throws IOException {
-		String output = getOutput();
-		Builder builder = BuilderFactory.create(output);
+		final String output = getOutput();
+		final Builder builder = BuilderFactory.create(output);
 		builder.build(output, getTrimOutputLevels(), d);
 	}
 
@@ -310,7 +310,7 @@ public class ZipDiffTask extends Task {
 		Differences diff = null;
 
 		try {
-			DifferenceCalculator calculator = new DifferenceCalculator(this.source, this.target);
+			final DifferenceCalculator calculator = new DifferenceCalculator(this.source, this.target);
 			calculator.setNumberOfSourceLevelsToTrim(getTrimSourceLevels());
 			calculator.setNumberOfTargetLevelsToTrim(getTrimTargetLevels());
 			calculator.setCompareCRCValues(getCompareCRCValues());
@@ -339,7 +339,7 @@ public class ZipDiffTask extends Task {
 			throw new BuildException("target is required");
 		}
 
-		String output = getOutput();
+		final String output = getOutput();
 		if ((output == null) || (output.length() < 1)) {
 			throw new BuildException("output is required");
 		}

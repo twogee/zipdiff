@@ -23,7 +23,7 @@ public class TextBuilder extends AbstractBuilder {
 	 */
 	@Override
 	public void build(OutputStream out, Differences d) {
-		PrintWriter pw = new PrintWriter(out);
+		final PrintWriter pw = new PrintWriter(out);
 		pw.println(d.toString());
 		pw.flush();
 	}

@@ -24,7 +24,7 @@ public class XmlBuilder extends AbstractBuilder {
 	 */
 	@Override
 	public void build(OutputStream out, Differences d) {
-		PrintWriter pw = new PrintWriter(out);
+		final PrintWriter pw = new PrintWriter(out);
 
 		pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		pw.print("<zipdiff source=\"");

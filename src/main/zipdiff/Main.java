@@ -121,55 +121,55 @@ public class Main {
 	static {
 		OPTIONS = new Options();
 
-		Option compareTS =
+		final Option compareTS =
 			new Option(OPTION_COMPARE_TIMESTAMPS, OPTION_COMPARE_TIMESTAMPS, false, "compare timestamps");
 		compareTS.setRequired(false);
 
-		Option compareCRC =
+		final Option compareCRC =
 			new Option(OPTION_COMPARE_CRC_VALUES, OPTION_COMPARE_CRC_VALUES, false, "compare CRC values");
 		compareCRC.setRequired(false);
 
-		Option source =
+		final Option source =
 			new Option(OPTION_SOURCE_FILE, OPTION_SOURCE_FILE, true, "source file to compare");
 		source.setRequired(true);
 
-		Option target =
+		final Option target =
 			new Option(OPTION_TARGET_FILE, OPTION_TARGET_FILE, true, "target file to compare");
 		target.setRequired(true);
 
-		Option numberOfLevelsToTrimInOutput =
+		final Option numberOfLevelsToTrimInOutput =
 			new Option(OPTION_TRIM_OUTPUT_LEVELS, OPTION_TRIM_OUTPUT_LEVELS, true,
 					   "number of directory levels to trim in the output file (if supported by output processor");
 		numberOfLevelsToTrimInOutput.setRequired(false);
 
-		Option numberOfLevelsToTrimInSource =
+		final Option numberOfLevelsToTrimInSource =
 			new Option(OPTION_TRIM_SOURCE_LEVELS, OPTION_TRIM_SOURCE_LEVELS, true,
 					   "number of directory levels to trim in the source file");
 		numberOfLevelsToTrimInSource.setRequired(false);
 
-		Option numberOfLevelsToTrimInTarget =
+		final Option numberOfLevelsToTrimInTarget =
 			new Option(OPTION_TRIM_TARGET_LEVELS, OPTION_TRIM_TARGET_LEVELS, true,
 					   "number of directory levels to trim in the target file");
 		numberOfLevelsToTrimInTarget.setRequired(false);
 
-		Option outputFileOption =
+		final Option outputFileOption =
 			new Option(OPTION_OUTPUT_FILE, OPTION_OUTPUT_FILE, true, "output filename");
 		outputFileOption.setRequired(false);
 
-		Option regex =
+		final Option regex =
 			new Option(OPTION_EXCLUDE_REGEX, OPTION_EXCLUDE_REGEX, true,
                        "regular expression to exclude matching files e.g. (?i)meta-inf.*");
 		regex.setRequired(false);
 
-		Option excludeSCMFilesOption =
+		final Option excludeSCMFilesOption =
 			new Option(OPTION_EXCLUDE_SCM_FILES, OPTION_EXCLUDE_SCM_FILES, false, "exclude SCM files");
 		excludeSCMFilesOption.setRequired(false);
 
-		Option exitWithError =
+		final Option exitWithError =
 			new Option(OPTION_ERROR_ON_DIFF, OPTION_ERROR_ON_DIFF, false,
 					   "exit with error code " + EXITCODE_DIFF + " if a difference is found");
 
-		Option verboseOption =
+		final Option verboseOption =
 			new Option(OPTION_VERBOSE, OPTION_VERBOSE, false, "verbose mode");
 
 		OPTIONS.addOption(compareTS);
@@ -191,7 +191,7 @@ public class Main {
 	 * @param f File
 	 */
 	private static void checkFile(File f) {
-		String filename = f.toString();
+		final String filename = f.toString();
 
 		if (!f.exists()) {
 			System.err.println("'" + filename + "' does not exist");
@@ -217,7 +217,7 @@ public class Main {
 	 * @throws IOException
 	 */
 	private static void writeOutputFile(String filename, int numberOfOutputLevelsToTrim, Differences d) throws IOException {
-		Builder builder = BuilderFactory.create(filename);
+		final Builder builder = BuilderFactory.create(filename);
 		builder.build(filename, numberOfOutputLevelsToTrim, d);
 	}
 
@@ -226,16 +226,16 @@ public class Main {
 	 * @param args The command line parameters
 	 */
 	public static void main(String[] args) {
-		CommandLineParser parser = new GnuParser();
+		final CommandLineParser parser = new GnuParser();
 
 		try {
-			CommandLine line = parser.parse(OPTIONS, args);
+			final CommandLine line = parser.parse(OPTIONS, args);
 
-			String sourcefile = line.getOptionValue(OPTION_SOURCE_FILE);
-			String targetfile = line.getOptionValue(OPTION_TARGET_FILE);
+			final String sourcefile = line.getOptionValue(OPTION_SOURCE_FILE);
+			final String targetfile = line.getOptionValue(OPTION_TARGET_FILE);
 
-			File source = new File(sourcefile);
-			File target = new File(targetfile);
+			final File source = new File(sourcefile);
+			final File target = new File(targetfile);
 
 			checkFile(source);
 			checkFile(target);
@@ -243,7 +243,7 @@ public class Main {
 			System.out.println("Source = " + source);
 			System.out.println("Target = " + target);
 
-			DifferenceCalculator calc = new DifferenceCalculator(source, target);
+			final DifferenceCalculator calc = new DifferenceCalculator(source, target);
 
 			int numberOfLevelsToTrimInSource = 0;
 			if (line.getOptionValue(OPTION_TRIM_SOURCE_LEVELS) != null) {
@@ -280,8 +280,8 @@ public class Main {
 			}
 
 			if (line.hasOption(OPTION_EXCLUDE_REGEX)) {
-				String regularExpression = line.getOptionValue(OPTION_EXCLUDE_REGEX);
-				Set<String> regexSet = new HashSet<String>();
+				final String regularExpression = line.getOptionValue(OPTION_EXCLUDE_REGEX);
+				final Set<String> regexSet = new HashSet<String>();
 				regexSet.add(regularExpression);
 
 				calc.setExcludeRegex(regexSet);
@@ -292,10 +292,10 @@ public class Main {
 				exitWithErrorOnDiff = true;
 			}
 
-			Differences diff = calc.getDifferences();
+			final Differences diff = calc.getDifferences();
 
 			if (line.hasOption(OPTION_OUTPUT_FILE)) {
-				String outputfile = line.getOptionValue(OPTION_OUTPUT_FILE);
+				final String outputfile = line.getOptionValue(OPTION_OUTPUT_FILE);
 				writeOutputFile(outputfile, numberOfLevelsToTrimInOutput, diff);
 			}
 
@@ -311,18 +311,18 @@ public class Main {
 				System.out.println("No differences found.");
 			}
 		} catch (MissingOptionException mox) {
-			StringBuilder sb = new StringBuilder("Missing required options: ");
+			final StringBuilder sb = new StringBuilder("Missing required options: ");
 			for (Object option : mox.getMissingOptions()) {
 				sb.append((String)option).append(", ");
 			}
 			sb.setLength(sb.length() - 2);
 			System.err.println(sb.toString());
-			HelpFormatter formatter = new HelpFormatter();
+			final HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("zipdiff.Main [options] ", OPTIONS);
 			System.exit(EXITCODE_ERROR);
 		} catch (ParseException pex) {
 			System.err.println(pex.getMessage());
-			HelpFormatter formatter = new HelpFormatter();
+			final HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("zipdiff.Main [options] ", OPTIONS);
 			System.exit(EXITCODE_ERROR);
 		} catch (Exception ex) {
