@@ -158,7 +158,7 @@ public class Differences {
 	 * @return boolean
 	 */
 	public boolean hasDifferences() {
-		return ((getChanged().size() > 0) || (getAdded().size() > 0) || (getRemoved().size() > 0));
+		return (getChanged().size() > 0) || (getAdded().size() > 0) || (getRemoved().size() > 0);
 	}
 
 	/**
@@ -173,10 +173,10 @@ public class Differences {
 		} else {
 			sb.append(getAdded().size()).append(" files were");
 		}
-		sb.append(" added to ").append(getTarget()).append("\n");
+		sb.append(" added to ").append(getTarget()).append('\n');
 
 		for (String name: getAdded().keySet()) {
-			sb.append("\t[added] ").append(name).append("\n");
+			sb.append("\t[added] ").append(name).append('\n');
 		}
 
 		if (getRemoved().size() == 1) {
@@ -184,10 +184,10 @@ public class Differences {
 		} else {
 			sb.append(getRemoved().size()).append(" files were");
 		}
-		sb.append(" removed from ").append(getTarget()).append("\n");
+		sb.append(" removed from ").append(getTarget()).append('\n');
 
 		for (String name: getRemoved().keySet()) {
-			sb.append("\t[removed] ").append(name).append("\n");
+			sb.append("\t[removed] ").append(name).append('\n');
 		}
 
 		if (getChanged().size() == 1) {
@@ -198,7 +198,7 @@ public class Differences {
 
 		for (String name: getChanged().keySet()) {
 			ZipEntry[] entries = getChanged().get(name);
-			sb.append("\t[changed] ").append(name).append(" ");
+			sb.append("\t[changed] ").append(name).append(' ');
 			sb.append(" ( size ").append(entries[0].getSize());
 			sb.append(" : ").append(entries[1].getSize());
 			sb.append(" )\n");
