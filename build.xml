@@ -30,7 +30,7 @@
 
     <!-- Ivy -->
     <property name="central.repo" value="http://repo1.maven.org/maven2"/>
-    <property name="ivy.version" value="2.3.0"/>
+    <property name="ivy.version" value="2.4.0"/>
     <property name="ivy.dir" value="${user.home}/.ivy2/cache/org.apache.ivy/jars"/>
     <property name="ivy.jar.name" value="ivy-${ivy.version}.jar"/>
 
