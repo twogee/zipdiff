@@ -24,7 +24,7 @@
   </publications>
 
   <dependencies>
-    <dependency org="junit" name="junit" rev="4.11" conf="core"/>
+    <dependency org="junit" name="junit" rev="4.12" conf="core"/>
     <dependency org="org.hamcrest" name="hamcrest-core" rev="1.3" conf="core"/>
     <dependency org="commons-cli" name="commons-cli" rev="1.2" conf="core,doxia"/>
     <dependency org="ant" name="ant" rev="1.6.5" conf="core"/>
