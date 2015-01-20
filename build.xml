@@ -7,19 +7,21 @@
 
 <project name="zipdiff" default="help" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
     <property file="${user.home}/build.properties"/>
-    <property name="xdocs.dir" value="${basedir}/xdocs"/>
     <property name="lib.dir" value="${basedir}/lib"/>
     <property name="src.dir" value="${basedir}/src"/>
     <property name="java.src.dir" value="${src.dir}/main"/>
     <property name="test.src.dir" value="${src.dir}/test"/>
     <property name="metadata.dir" value="${src.dir}/metadata"/>
+    <property name="site.dir" value="${src.dir}/site"/>
+    <property name="site.xdoc.dir" value="${src.dir}/site/xdoc"/>
     <property name="build.dir" value="${basedir}/build"/>
     <property name="javadoc.build.dir" value="${build.dir}/doc/api"/>
-    <property name="xdocs.build.dir" value="${build.dir}/doc/html"/>
+    <property name="site.build.dir" value="${build.dir}/doc/html"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
     <property name="junit.reports.dir" value="${basedir}/junit-reports"/>
 
-    <property name="name" value="zipdiff"/>
+	<!-- Name and version -->
+	<property name="name" value="${ant.project.name}"/>
     <property name="name.ant" value="${name}-ant"/>
     <property name="major" value="0"/>
     <property name="minor" value="5"/>
@@ -96,31 +98,31 @@
                  windowtitle="${name}"/>
     </target>
 
-    <target name="xdocs" depends="resolve">
+    <target name="site" depends="resolve">
         <taskdef resource="net/sf/antcontrib/antlib.xml" classpath="${lib.dir}/doxia/ant-contrib.jar" onerror="ignore"/>
         <for param="xdoc.source">
             <path>
-                <fileset dir="${xdocs.dir}" includes="*.xml" excludes="navigation.xml"/>
+                <fileset dir="${site.xdoc.dir}" includes="*.xml"/>
             </path>
             <sequential>
                 <propertyregex property="xdoc.html" input="@{xdoc.source}"
-                               regexp=".*[\\/]xdocs[\\/](.*)\.xml$" replace="\1.html" override="true"/>
+                               regexp=".*[\\/]xdoc[\\/](.*)\.xml$" replace="\1.html" override="true"/>
                 <echo>${xdoc.html}</echo>
                 <java classname="org.apache.maven.doxia.cli.ConverterCli" classpathref="doxia.class.path">
                     <arg line="-f -from xdoc -to xhtml"/>
                     <arg value="-in"/>
                     <arg file="@{xdoc.source}"/>
                     <arg value="-out"/>
-                    <arg file="${xdocs.build.dir}/${xdoc.html}"/>
+                    <arg file="${site.build.dir}/${xdoc.html}"/>
                 </java>
             </sequential>
         </for>
-        <copy todir="${xdocs.build.dir}">
-            <fileset dir="${xdocs.dir}" includes="*.html"/>
+        <copy todir="${site.build.dir}">
+            <fileset dir="${site.dir}" includes="*.html"/>
         </copy>
     </target>
 
-    <target name="docs" depends="javadocs, xdocs"/>
+    <target name="docs" depends="javadocs, site"/>
 
     <target name="project.jarfile" depends="build">
         <jar destfile="${build.dir}/${distrib.jar.filename}"
