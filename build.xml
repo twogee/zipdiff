@@ -34,29 +34,7 @@
     <property name="ivy.dir" value="${user.home}/.ivy2/cache/org.apache.ivy/jars"/>
     <property name="ivy.jar.name" value="ivy-${ivy.version}.jar"/>
 
-    <mkdir dir="${ivy.dir}"/>
-    <get usetimestamp="true" src="https://repository.apache.org/content/repositories/releases/org/apache/ivy/ivy/${ivy.version}/${ivy.jar.name}"
-         skipexisting="true"
-         dest="${ivy.dir}/${ivy.jar.name}"/>
-    <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${ivy.dir}/${ivy.jar.name}"/>
-
-    <target name="init">
-        <ivy:settings file="${basedir}/ivy.settings.xml"/>
-    </target>
-
-    <target name="resolve" depends="prepare">
-        <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]"
-                      conf="core, doxia"
-                      sync="true"/>
-    </target>
-
-    <path id="project.class.path">
-        <fileset dir="${lib.dir}/core" includes="*.jar"/>
-    </path>
-
-    <path id="doxia.class.path">
-        <fileset dir="${lib.dir}/doxia" includes="*.jar"/>
-    </path>
+    <available property="has.ivy" file="${ivy.dir}/${ivy.jar.name}" type="file"/>
 
     <!-- ###################################################### -->
     <!-- target definitions                                     -->
@@ -68,6 +46,23 @@
 
     <target name="all" depends="distrib"/>
 
+    <target name="clean">
+        <delete dir="${classes.dir}"/>
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="get.ivy" unless="has.ivy">
+        <mkdir dir="${ivy.dir}"/>
+        <get usetimestamp="true" src="https://repository.apache.org/content/repositories/releases/org/apache/ivy/ivy/${ivy.version}/${ivy.jar.name}"
+             skipexisting="true"
+             dest="${ivy.dir}/${ivy.jar.name}"/>
+    </target>
+
+    <target name="init" depends="get.ivy">
+        <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${ivy.dir}/${ivy.jar.name}"/>
+        <ivy:settings file="${basedir}/ivy.settings.xml"/>
+    </target>
+
     <target name="prepare" depends="init">
         <mkdir dir="${build.dir}"/>
         <mkdir dir="${javadoc.build.dir}"/>
@@ -75,9 +70,18 @@
         <mkdir dir="${junit.reports.dir}"/>
     </target>
 
-    <target name="clean">
-        <delete dir="${classes.dir}"/>
-        <delete dir="${build.dir}"/>
+    <target name="resolve" depends="prepare">
+        <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]"
+                      conf="core, doxia"
+                      sync="true"/>
+
+        <path id="project.class.path">
+            <fileset dir="${lib.dir}/core" includes="*.jar"/>
+        </path>
+
+        <path id="doxia.class.path">
+            <fileset dir="${lib.dir}/doxia" includes="*.jar"/>
+        </path>
     </target>
 
     <target name="javadocs" depends="resolve">
