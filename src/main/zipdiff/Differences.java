@@ -166,7 +166,7 @@ public class Differences {
 	 * @return String
 	 */
 	public String toString() {
-		final StringBuffer sb = new StringBuffer();
+		final StringBuilder sb = new StringBuilder();
 
 		if (getAdded().size() == 1) {
 			sb.append("1 file was");

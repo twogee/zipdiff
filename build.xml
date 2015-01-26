@@ -19,6 +19,7 @@
     <property name="site.build.dir" value="${build.dir}/doc/html"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
     <property name="junit.reports.dir" value="${basedir}/junit-reports"/>
+    <property name="java.target" value="1.6"/>
 
 	<!-- Name and version -->
 	<property name="name" value="${ant.project.name}"/>
@@ -164,8 +165,8 @@
                destdir="${classes.dir}"
                includeAntRuntime="yes"
                classpathref="project.class.path"
-               source="1.5"
-               target="1.5"
+               source="${java.target}"
+               target="${java.target}"
                debug="on">
             <src path="${java.src.dir}"/>
         </javac>

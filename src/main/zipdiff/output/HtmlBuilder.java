@@ -120,7 +120,7 @@ public class HtmlBuilder extends AbstractBuilder {
 	 * @return content of style tag
 	 */
 	protected String getStyleTag() {
-		final StringBuffer sb = new StringBuffer();
+		final StringBuilder sb = new StringBuilder();
 
 		sb.append("<style type=\"text/css\">\n");
 		sb.append(" body, p {");
