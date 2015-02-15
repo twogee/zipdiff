@@ -9,9 +9,9 @@
     <property file="${user.home}/build.properties"/>
     <property name="lib.dir" value="${basedir}/lib"/>
     <property name="src.dir" value="${basedir}/src"/>
-    <property name="java.src.dir" value="${src.dir}/main"/>
-    <property name="test.src.dir" value="${src.dir}/test"/>
-    <property name="metadata.dir" value="${src.dir}/metadata"/>
+    <property name="java.src.dir" value="${src.dir}/main/java"/>
+    <property name="test.src.dir" value="${src.dir}/test/java"/>
+    <property name="metadata.dir" value="${src.dir}/main/resources"/>
     <property name="site.dir" value="${src.dir}/site"/>
     <property name="site.xdoc.dir" value="${src.dir}/site/xdoc"/>
     <property name="build.dir" value="${basedir}/build"/>
@@ -127,7 +127,7 @@
 
     <target name="project.jarfile" depends="build">
         <jar destfile="${build.dir}/${distrib.jar.filename}"
-             manifest="${metadata.dir}/JAR-manifest.txt"
+             manifest="${metadata.dir}/META-INF/JAR-manifest.txt"
              compress="true">
             <manifest>
                 <section name="${name}">
@@ -142,7 +142,7 @@
 
     <target name="ant.jarfile" depends="build">
         <jar destfile="${build.dir}/${distrib.jar.ant.filename}"
-             manifest="${metadata.dir}/Ant-JAR-manifest.txt"
+             manifest="${metadata.dir}/META-INF/Ant-JAR-manifest.txt"
              compress="true">
             <manifest>
                 <section name="${name.ant}">
