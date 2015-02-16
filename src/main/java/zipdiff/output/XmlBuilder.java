@@ -56,7 +56,7 @@ public class XmlBuilder extends AbstractBuilder {
 	 */
 	protected void writeStatusTags(PrintWriter pw, String statusTag, Set<String> modified) {
 		for (String key : modified) {
-			pw.print(String.format("<%s>%s</%s>",statusTag,key,statusTag));
+			pw.print(String.format("<%s>%s</%s>", statusTag, key, statusTag));
 		}
 	}
 }

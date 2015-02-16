@@ -119,7 +119,7 @@ public class DifferenceCalculatorTest {
 		// ad an entry
 		JarEntry entry = new JarEntry(ENTRYA);
 		testJarOS.putNextEntry(entry);
-		byte data[] = new byte[2048];
+		byte[] data = new byte[2048];
 		for (int i = 0; i < data.length; i++) {
 			data[i] = 'a';
 		}
@@ -146,7 +146,7 @@ public class DifferenceCalculatorTest {
 		// ad an entry
 		JarEntry entry = new JarEntry(ENTRYA);
 		testJarOS.putNextEntry(entry);
-		byte data[] = new byte[2048];
+		byte[] data = new byte[2048];
 		for (int i = 0; i < data.length; i++) {
 			data[i] = 'a';
 		}
@@ -173,7 +173,7 @@ public class DifferenceCalculatorTest {
 		// add an entry
 		JarEntry entry = new JarEntry(ENTRYA);
 		testJarOS.putNextEntry(entry);
-		byte data[] = new byte[2048];
+		byte[] data = new byte[2048];
 		for (int i = 0; i < data.length; i++) {
 			data[i] = 'a';
 		}
@@ -206,7 +206,7 @@ public class DifferenceCalculatorTest {
 		// ad an entry
 		JarEntry entry = new JarEntry(ENTRYB);
 		testJarOS.putNextEntry(entry);
-		byte data[] = new byte[2048];
+		byte[] data = new byte[2048];
 		for (int i = 0; i < data.length; i++) {
 			data[i] = 'b';
 		}

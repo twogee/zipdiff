@@ -73,7 +73,7 @@ public class HtmlBuilder extends AbstractBuilder {
 		if (s.size() > 0) {
 			pw.println("<ul>");
 			for (String key: s) {
-				pw.println(String.format("<li>%s</li>",key));
+				pw.println(String.format("<li>%s</li>", key));
 			}
 			pw.println("</ul>");
 		}

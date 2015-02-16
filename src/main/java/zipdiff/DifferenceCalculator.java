@@ -153,7 +153,7 @@ public class DifferenceCalculator {
 			String regex = "";
 
 			for (String pattern: patterns) {
-				regex += (!regex.isEmpty()) ? String.format("|(%s)", pattern) : String.format("(%s)",pattern);
+				regex += (regex.isEmpty()) ? String.format("(%s)", pattern) : String.format("|(%s)", pattern);
 			}
 			excludePattern = Pattern.compile(regex);
 			logger.log(Level.FINE, "Regular expression is : " + regex);
@@ -404,7 +404,7 @@ public class DifferenceCalculator {
 	public static boolean isZipFile(String filename) {
 		try {
 			return new ZipInputStream(new FileInputStream(filename)).getNextEntry() != null;
-		} catch(IOException e) {
+		} catch (IOException e) {
 			return false;
 		}
 	}

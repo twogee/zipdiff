@@ -101,7 +101,7 @@ public class ZipBuilder extends AbstractBuilder {
 	 * @throws IOException in case of an input/output error
 	 */
 	private void copyStream(InputStream input, OutputStream output) throws IOException {
-		final byte buffer[] = new byte[4096];
+		final byte[] buffer = new byte[4096];
 		int count = input.read(buffer);
 		while (count > -1) {
 			output.write(buffer, 0, count);
