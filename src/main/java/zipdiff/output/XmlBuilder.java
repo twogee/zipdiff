@@ -24,31 +24,24 @@ public class XmlBuilder extends AbstractBuilder {
 	 */
 	@Override
 	public void build(OutputStream out, Differences d) {
-		final PrintWriter pw = new PrintWriter(out);
-
-		pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		pw.print("<zipdiff source=\"");
-
 		String source = d.getSource();
-
 		if (source == null) {
 			source = "source.zip";
 		}
-		pw.print(source);
-		pw.print("\" target=\"");
 
 		String target = d.getTarget();
-
 		if (target == null) {
 			target = "target.zip";
 		}
-		pw.print(target);
-		pw.println("\">");
 
+		final PrintWriter pw = new PrintWriter(out);
+
+		pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+		pw.print(String.format("<zipdiff source=\"%s\" target=\"%s\">", source, target));
 		pw.println("<differences>");
-		writeAdded(pw, d.getAdded().keySet());
-		writeRemoved(pw, d.getRemoved().keySet());
-		writeChanged(pw, d.getChanged().keySet());
+		writeStatusTags(pw, "added", d.getAdded().keySet());
+		writeStatusTags(pw, "removed", d.getRemoved().keySet());
+		writeStatusTags(pw, "changed", d.getChanged().keySet());
 		pw.println("</differences>");
 		pw.println("</zipdiff>");
 
@@ -56,41 +49,14 @@ public class XmlBuilder extends AbstractBuilder {
 	}
 
 	/**
-	 * writes the list of added files
-	 * @param pw write to
-	 * @param added set of added files
-	 */
-	protected void writeAdded(PrintWriter pw, Set<String> added) {
-		for (String key: added) {
-			pw.print("<added>");
-			pw.print(key);
-			pw.println("</added>");
-		}
-	}
-
-	/**
-	 * writes the list of removed files
-	 * @param pw write to
-	 * @param removed set of removed files
-	 */
-	protected void writeRemoved(PrintWriter pw, Set<String> removed) {
-		for (String key: removed) {
-			pw.print("<removed>");
-			pw.print(key);
-			pw.println("</removed>");
-		}
-	}
-
-	/**
 	 * writes the list of modified files
 	 * @param pw write to
-	 * @param changed set of modified files
+	 * @param statusTag kind of modification (added, removed, changed)
+	 * @param modified set of modified files
 	 */
-	protected void writeChanged(PrintWriter pw, Set<String> changed) {
-		for (String key: changed) {
-			pw.print("<changed>");
-			pw.print(key);
-			pw.println("</changed>");
+	protected void writeStatusTags(PrintWriter pw, String statusTag, Set<String> modified) {
+		for (String key : modified) {
+			pw.print(String.format("<%s>%s</%s>",statusTag,key,statusTag));
 		}
 	}
 }

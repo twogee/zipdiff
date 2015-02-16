@@ -25,6 +25,16 @@ public class HtmlBuilder extends AbstractBuilder {
 	 */
 	@Override
 	public void build(OutputStream out, Differences d) {
+		String source = d.getSource();
+		if (source == null) {
+			source = "source.zip";
+		}
+
+		String target = d.getTarget();
+		if (target == null) {
+			target = "target.zip";
+		}
+
 		final PrintWriter pw = new PrintWriter(out);
 
 		pw.println("<html>");
@@ -36,28 +46,11 @@ public class HtmlBuilder extends AbstractBuilder {
 
 		pw.println("<body>");
 
-		pw.print("<p>Source: ");
-		String source = d.getSource();
+		pw.println(String.format("<p>Source: %s<br/>Target: %s</p>", source, target));
 
-		if (source == null) {
-			source = "source.zip";
-		}
-		pw.print(source);
-		pw.println("<br/>");
-
-		pw.print("Target: ");
-
-		String target = d.getTarget();
-
-		if (target == null) {
-			target = "target.zip";
-		}
-		pw.print(target);
-		pw.println("</p>");
-
-		writeAdded(pw, d.getAdded().keySet());
-		writeRemoved(pw, d.getRemoved().keySet());
-		writeChanged(pw, d.getChanged().keySet());
+		writeDiffSet(pw, "Added", d.getAdded().keySet());
+		writeDiffSet(pw, "Removed", d.getRemoved().keySet());
+		writeDiffSet(pw, "Changed", d.getChanged().keySet());
 		pw.println("<hr/>");
 		pw.println("<p>");
 		pw.println("Generated at " + new Date());
@@ -70,46 +63,17 @@ public class HtmlBuilder extends AbstractBuilder {
 	}
 
 	/**
-	 * writes the list of added files
-	 * @param pw write to write to
-	 * @param added set of added files
-	 */
-	protected void writeAdded(PrintWriter pw, Set<String> added) {
-		writeDiffSet(pw, "Added", added);
-	}
-
-	/**
-	 * writes the list of removed files
-	 * @param pw write to write to
-	 * @param removed set of removed files
-	 */
-	protected void writeRemoved(PrintWriter pw, Set<String> removed) {
-		writeDiffSet(pw, "Removed", removed);
-	}
-
-	/**
-	 * writes the list of modified files
-	 * @param pw write to write to
-	 * @param changed set of modified files
-	 */
-	protected void writeChanged(PrintWriter pw, Set<String> changed) {
-		writeDiffSet(pw, "Changed", changed);
-	}
-
-	/**
 	 * writes a set of differences
 	 * @param pw write to write to
 	 * @param name heading
 	 * @param s	set
 	 */
 	protected void writeDiffSet(PrintWriter pw, String name, Set<String> s) {
-		pw.println("<h2>" + name + " (" + s.size() + " entries)</h2>");
+		pw.println(String.format("<h2>%s (%d entries)</h2>", name, s.size()));
 		if (s.size() > 0) {
 			pw.println("<ul>");
 			for (String key: s) {
-				pw.print("<li>");
-				pw.print(key);
-				pw.println("</li>");
+				pw.println(String.format("<li>%s</li>",key));
 			}
 			pw.println("</ul>");
 		}

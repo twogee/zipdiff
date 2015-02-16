@@ -6,6 +6,7 @@
 package zipdiff;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -152,10 +153,7 @@ public class DifferenceCalculator {
 			String regex = "";
 
 			for (String pattern: patterns) {
-				if (regex.length() > 0) {
-					regex += "|";
-				}
-				regex += "(" + pattern + ")";
+				regex += (!regex.isEmpty()) ? String.format("|(%s)", pattern) : String.format("(%s)",pattern);
 			}
 			excludePattern = Pattern.compile(regex);
 			logger.log(Level.FINE, "Regular expression is : " + regex);
@@ -404,16 +402,11 @@ public class DifferenceCalculator {
 	 * @return true if it has a valid extension.
 	 */
 	public static boolean isZipFile(String filename) {
-		if (filename == null) {
+		try {
+			return new ZipInputStream(new FileInputStream(filename)).getNextEntry() != null;
+		} catch(IOException e) {
 			return false;
 		}
-
-		final String lowercaseName = filename.toLowerCase();
-		return lowercaseName.endsWith(".zip")
-		    || lowercaseName.endsWith(".ear")
-		    || lowercaseName.endsWith(".war")
-		    || lowercaseName.endsWith(".rar")
-		    || lowercaseName.endsWith(".jar");
 	}
 
 	/**

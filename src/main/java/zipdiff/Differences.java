@@ -168,44 +168,24 @@ public class Differences {
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 
-		if (getAdded().size() == 1) {
-			sb.append("1 file was");
-		} else {
-			sb.append(getAdded().size()).append(" files were");
-		}
-		sb.append(" added to ").append(getTarget()).append('\n');
-
-		for (String name: getAdded().keySet()) {
-			sb.append("\t[added] ").append(name).append('\n');
+		sb.append(String.format("%d file%s added to %s\n", getAdded().size(), (getAdded().size() == 1) ? "" : "s", getTarget()));
+		for (String key : getAdded().keySet()) {
+			sb.append(String.format("\t[added] %s\n", key));
 		}
 
-		if (getRemoved().size() == 1) {
-			sb.append("1 file was");
-		} else {
-			sb.append(getRemoved().size()).append(" files were");
-		}
-		sb.append(" removed from ").append(getTarget()).append('\n');
-
-		for (String name: getRemoved().keySet()) {
-			sb.append("\t[removed] ").append(name).append('\n');
+		sb.append(String.format("%d file%s removed from %s\n", getRemoved().size(), (getRemoved().size() == 1) ? "" : "s", getSource()));
+		for (String key : getRemoved().keySet()) {
+			sb.append(String.format("\t[removed] %s\n", key));
 		}
 
-		if (getChanged().size() == 1) {
-			sb.append("1 file changed\n");
-		} else {
-			sb.append(getChanged().size()).append(" files changed\n");
-		}
-
-		for (String name: getChanged().keySet()) {
+		sb.append(String.format("%d file%s changed\n", getChanged().size(), (getChanged().size() == 1) ? "" : "s"));
+		for (String name : getChanged().keySet()) {
 			ZipEntry[] entries = getChanged().get(name);
-			sb.append("\t[changed] ").append(name).append(' ');
-			sb.append(" ( size ").append(entries[0].getSize());
-			sb.append(" : ").append(entries[1].getSize());
-			sb.append(" )\n");
+			sb.append(String.format("\t[changed] %s (size: %d : %d)\n", name, entries[0].getSize(), entries[1].getSize()));
 		}
-		final int differenceCount = getAdded().size() + getChanged().size() + getRemoved().size();
 
-		sb.append("Total differences: ").append(differenceCount);
+		final int differenceCount = getAdded().size() + getChanged().size() + getRemoved().size();
+		sb.append(String.format("Total differences: %d", differenceCount));
 		return sb.toString();
 	}
 }
