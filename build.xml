@@ -18,7 +18,7 @@
     <property name="javadoc.build.dir" value="${build.dir}/doc/api"/>
     <property name="site.build.dir" value="${build.dir}/doc/html"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
-    <property name="junit.reports.dir" value="${basedir}/junit-reports"/>
+    <property name="junit.reports.dir" value="${build.dir}/junit-reports"/>
     <property name="java.target" value="1.6"/>
 
 	<!-- Name and version -->
@@ -50,7 +50,6 @@
     <target name="all" depends="distrib"/>
 
     <target name="clean">
-        <delete dir="${classes.dir}"/>
         <delete dir="${build.dir}"/>
     </target>
 
@@ -154,8 +153,8 @@
                 <include name="zipdiff/**/*.class"/>
                 <exclude name="zipdiff/**/Main.class"/>
             </fileset>
-            <zipfileset dir="${metadata.dir}" prefix="zipdiff">
-                <include name="antlib.xml"/>
+            <zipfileset dir="${metadata.dir}">
+                <include name="**/antlib.xml"/>
             </zipfileset>
         </jar>
     </target>
