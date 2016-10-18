@@ -162,7 +162,7 @@ public class DifferenceCalculator {
 
 	/**
 	 * Returns true if excludePattern matches the given entryName
-	 * @param filepath
+	 * @param filepath ditto
 	 * @param entryName The name of ZipEntry to be checked if it should be excluded.
 	 * @return true if the ZipEntry should be excluded.
 	 */
@@ -381,7 +381,7 @@ public class DifferenceCalculator {
 	 * Method processEmbeddedZipFile.
 	 * @param prefix String
 	 * @param is InputStream
-	 * @param m Map<String,ZipEntry>
+	 * @param m Map&lt;String,ZipEntry&gt;
 	 * @throws IOException
 	 */
 	protected void processEmbeddedZipFile(String prefix, InputStream is, Map<String, ZipEntry> m) throws IOException {
@@ -401,6 +401,7 @@ public class DifferenceCalculator {
 	 * @param filename The name of the file to check.
 	 * @return true if it has a valid extension.
 	 */
+	@SuppressWarnings("resource")
 	public static boolean isZipFile(String filename) {
 		try {
 			return new ZipInputStream(new FileInputStream(filename)).getNextEntry() != null;
@@ -443,8 +444,8 @@ public class DifferenceCalculator {
 	/**
 	 * Given two Maps of ZipEntries it will generate a Differences of all the
 	 * differences found between the two maps.
-	 * @param sourcemap Map<String,ZipEntry>
-	 * @param targetmap Map<String,ZipEntry>
+	 * @param sourcemap Map&lt;String, ZipEntry&gt;
+	 * @param targetmap Map&lt;String, ZipEntry&gt;
 	 * @return All the differences found between the two maps
 	 */
 	protected Differences calculateDifferences(Map<String, ZipEntry> sourcemap, Map<String, ZipEntry> targetmap) {

@@ -221,7 +221,7 @@ public class ZipDiffTask extends Task {
 
 	/**
 	 * Method getExludeRegexp.
-	 * @return Set<String>
+	 * @return Set&lt;String&gt;
 	 */
 	public Set<String> getExludeRegexp() {
 		return this.patterns;

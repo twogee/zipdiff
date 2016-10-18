@@ -123,7 +123,7 @@ public class Differences {
 
 	/**
 	 * Method getAdded.
-	 * @return Map<String,ZipEntry[]>
+	 * @return Map&lt;String, ZipEntry[]&gt;
 	 */
 	public Map<String, ZipEntry[]> getAdded() {
 		return this.added;
@@ -131,7 +131,7 @@ public class Differences {
 
 	/**
 	 * Method getRemoved.
-	 * @return Map<String,ZipEntry[]>
+	 * @return Map&lt;String, ZipEntry[]&gt;
 	 */
 	public Map<String, ZipEntry[]> getRemoved() {
 		return this.removed;
@@ -139,7 +139,7 @@ public class Differences {
 
 	/**
 	 * Method getChanged.
-	 * @return Map<String,ZipEntry[]>
+	 * @return Map&lt;String, ZipEntry[]&gt;
 	 */
 	public Map<String, ZipEntry[]> getChanged() {
 		return this.changed;
@@ -147,7 +147,7 @@ public class Differences {
 
 	/**
 	 * Method getExcluded.
-	 * @return Map<String,ZipEntry[]>
+	 * @return Map&lt;String, ZipEntry[]&gt;
 	 */
 	public Map<String, ZipEntry[]> getExcluded() {
 		return this.excluded;
