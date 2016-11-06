@@ -36,17 +36,17 @@ public class DifferenceCalculatorTest {
 	/**
 	 * Field ENTRYA.
 	 */
-	private static String ENTRYA = "A";
+	private static final String ENTRYA = "A";
 
 	/**
 	 * Field ENTRYB.
 	 */
-	private static String ENTRYB = "B";
+	private static final String ENTRYB = "B";
 
 	/**
 	 * Field ENTRY_CVS.
 	 */
-	private static String ENTRY_CVS = "CVS/Root";
+	private static final String ENTRY_CVS = "CVS/Root";
 
 	/**
 	 * Field SYSTEM_TMP_DIR_PROPERTY.

@@ -22,5 +22,5 @@ public interface Builder {
 	 * @param d differences
 	 * @throws IOException in case of an input/output error
 	 */
-	public void build(String filename, int numberOfOutputLevelsToTrim, Differences d) throws IOException;
+	void build(String filename, int numberOfOutputLevelsToTrim, Differences d) throws IOException;
 }
